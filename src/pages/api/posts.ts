@@ -2,7 +2,7 @@ export const prerender = false;
 import { type APIRoute } from 'astro';
 import { getCollection } from 'astro:content';
 
-const PAGE_SIZE = 10; // 每页显示的帖子数量
+const PAGE_SIZE = 2; // 每页显示的帖子数量
 
 export const GET: APIRoute = async ({ url }) => {
   let postCollection = (
