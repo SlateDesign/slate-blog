@@ -20,7 +20,7 @@
     "build": "npm run tsc && astro check && astro build",
     "preview": "astro preview",
     "astro": "astro",
-    "tsc": "tsc --noEmit",
+    "tsc": "npx astro sync && tsc --noEmit",
     "lint": "npm run tsc && npm run lint:script && astro check",
     "lint-fix": "npm run lint-fix:script",
     "lint-fix:script": "npm run lint:script -- --fix",
