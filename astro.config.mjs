@@ -1,4 +1,5 @@
 import { defineConfig } from 'astro/config';
+import vercel from '@astrojs/vercel';
 import react from '@astrojs/react';
 import tailwind from '@astrojs/tailwind';
 import svgr from 'vite-plugin-svgr';
@@ -36,6 +37,7 @@ function generateAstroConfigure() {
       ],
       rehypePlugins: [rehypeKatex, rehypeFigure],
     },
+    adapter: vercel(),
     vite: {
       plugins: [
         svgr(),

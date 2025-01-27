@@ -1,47 +1,9 @@
 ---
-import { getCollection } from 'astro:content';
+export const prerender = false;
 import Search from '@/components/search';
 import PageLayout from '@/components/layouts/PageLayout.astro';
-// import Button from '@/components/button';
+import Contents from '@/components/home/contents';
 import slateConfig from '~@/slate.config';
-
-const postCollection = await getCollection('post', ({ data }) => {
-  return import.meta.env.DEV || data.draft !== true;
-});
-
-const tagCounts = postCollection.reduce<Record<string, number>>(
-  (res, post) => {
-    const postTags = post.data.tags;
-    if (!postTags || !postTags.length) return res;
-    postTags.forEach((tag) => {
-      if (tag.trim() === '') return;
-
-      if (res[tag]) {
-        res[tag]++;
-      } else {
-        res[tag] = 1;
-      }
-    });
-    return res;
-  },
-  {
-    All: postCollection.length,
-  },
-);
-
-const tags = Object.keys(tagCounts).map((tag) => ({
-  name: tag,
-  count: tagCounts[tag],
-}));
-
-const posts = [...postCollection]
-  .sort((a, b) => b.data.pubDate!.getTime() - a.data.pubDate!.getTime())
-  .map((post) => ({
-    id: post.id,
-    slug: post.slug,
-    url: `/blog/${post.slug}`,
-    data: post.data,
-  }));
 ---
 
 <PageLayout>
@@ -56,44 +18,5 @@ const posts = [...postCollection]
     />
   </section>
 
-  <section class="mb-16">
-    <div class="text-base text-slate12">
-      {
-        posts.map((item) => (
-          <a class="blog-list-item" href={item.url} title={item.data.title}>
-            <span class="flex-shrink-0">{item.data.title}</span>
-            <span class="mx-8 hidden h-px w-full flex-grow border-t border-dashed border-slate6 sm:flex" />
-            <span class="flex-shrink-0 text-slate8">
-              {item.data.pubDate?.toLocaleDateString('en-US', {
-                year: 'numeric',
-                month: 'short',
-                day: 'numeric',
-              })}
-            </span>
-          </a>
-        ))
-      }
-    </div>
-    <!-- <Button className='m-auto mt-6' block> More </Button> -->
-  </section>
-
-  <!-- S 标签 -->
-  <section class="mb-16">
-    <ul class="flex flex-wrap gap-2 text-base text-slate10">
-      {
-        tags.map(({ name, count }) => (
-          <li class="block cursor-pointer rounded-full bg-slate3 px-4 py-2 text-slate10 transition-all hover:bg-slate4 hover:text-slate11">
-            {name}
-            <sup class="text-[10px] text-slate8">{count}</sup>
-          </li>
-        ))
-      }
-    </ul>
-  </section>
-  <!-- E 标签 -->
+  <Contents client:load />
 </PageLayout>
-<style>
-  .blog-list-item {
-    @apply flex cursor-pointer flex-col justify-between rounded-lg py-2.5 transition-all active:scale-[0.995] active:bg-slate4 sm:flex-row sm:items-center sm:px-2 sm:hover:bg-slate3;
-  }
-</style>
