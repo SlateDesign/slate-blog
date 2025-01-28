@@ -4,8 +4,8 @@ import { getCollection } from 'astro:content';
 
 const PAGE_SIZE = 2; // 每页显示的帖子数量
 
-export const GET: APIRoute = async ({ url }) => {
-  let postCollection = (
+async function getAllPosts() {
+  const postCollection = (
     await getCollection('post', ({ data }) => {
       return import.meta.env.DEV || data.draft !== true;
     })
@@ -24,6 +24,12 @@ export const GET: APIRoute = async ({ url }) => {
         tags: item.data.tags,
       };
     });
+
+  return postCollection;
+}
+
+export const GET: APIRoute = async ({ url }) => {
+  let postCollection = await getAllPosts();
   const params = url.searchParams;
   const tag = params.get('tag');
 
@@ -36,7 +42,9 @@ export const GET: APIRoute = async ({ url }) => {
   const page = Number(params.get('page')) || 1;
   const pageSize = Number(params.get('pageSize')) || PAGE_SIZE;
   const total = postCollection.length;
-  const postList = postCollection.slice((page - 1) * pageSize, page * pageSize);
+  const startIndex = (page - 1) * pageSize;
+  const endIndex = page * pageSize;
+  const postList = postCollection.slice(startIndex, endIndex);
 
   return new Response(
     JSON.stringify({
@@ -44,14 +52,14 @@ export const GET: APIRoute = async ({ url }) => {
       total,
       page,
       pageSize,
-      hasMore: pageSize <= postList.length,
+      hasMore: total > endIndex,
     }),
     {
       status: 200,
       headers: {
         'Content-Type': 'application/json',
+        'Cache-Control': 'max-age=3600, stale-while-revalidate=30',
       },
     },
   );
 };
-

@@ -20,7 +20,6 @@ const Tags = (props: TagsProps) => {
 
   const handleChange = useCallback(
     (item: TagItem) => {
-      console.log(item, activeName);
       if (activeName === item.name) return;
       if (onChange) {
         onChange(item.name);
