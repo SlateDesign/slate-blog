@@ -5,7 +5,7 @@ import { defineConfig } from './src/helpers/config-helper';
 
 export default defineConfig({
   lang: 'en-US',
-  site: 'https://etam-blog.vercel.app',
+  site: 'https://irfankurnia.com',
   avatar: '/avatar.png',
   title: 'Erratic Thoughts and More',
   description: 'A Personal Journal of Irfan Kurnia.',
