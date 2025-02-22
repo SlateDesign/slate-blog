@@ -7,137 +7,39 @@ tags:
 pubDate: 2025-02-16
 ---
 
-![Me standing in front of the Green Day concert gate!](/public/green-day.jpg "Me at Green Day Concert")
+![Me standing in front of the Green Day concert gate!](https://raw.githubusercontent.com/IrfanKurnia33/etam-blog/refs/heads/main/public/green-day.jpg "Me at Green Day Concert")
 
-## Why We build it?
-We love writing and sharing, and we also appreciate great internet products. So we created this minimalist blogging product, focusing on content itself, providing a smooth and pure writing and reading experience, and built on the latest technology framework to make it faster and lighter.
+## A Cassette and a Bootleg DVD
+When I was about 8 years old, I liked to go through my brother and sister's stuff to play around. This was when I discovered a black cassette with an illustration of a hand holding a grenade. It read "American Idiot" which sounded so strange to me.
 
-It also works seamlessly with [Obsidian](https://obsidian.md/), helping you turn your notes into published posts effortlessly.
+I put it on our family's orange portable radio tape player, and it hit me. A loud power chord followed by a blast of drum cymbals. It was truly powerful. "Don't wanna be an American idiot" and the rest of the lyrics sounded strange to me. But in what felt like a bleep, I arrived at "Whatsername."
 
-## ✨ Features
+I thought to myself, this is my favorite music album. And I've never listened to a full album before.
 
-- Minimalist style theme, adaptable to multiple platforms
-- Support `light` and `dark` mode.
-- Zero-based quick start, foolproof configuration, easy deployment
-- Support for article drafts, local preview, and automatic draft filtering in production builds
-- Default RSS generation with Follow subscription authentication
-- Integrated Algolia search
-- Complete SEO optimization to improve search engine rankings
+Rummaging through my brother's stuff again, I saw a bootleg DVD with a red cover and a black silhouette of a man (I didn't even know who Billie Joe Armstrong was at the time). I put it on the DVD player and there it is: the sun rising in Milton Keynes, the band enters the stage and just goes with it.
 
-## 🗂 Directory Structure
+I was hooked! I was fully invested. Then I discovered that my older brother had this complete collection of cassettes from the first album all the way to American Idiot. This was 2004/05 so the album was still fresh out of the oven. I would spend my time after school just watching the DVD over and over again. Watching the in-between segments of Billie, Mike, and Tre talking about the huge gig, the album, and the band.
 
-```
-- plugins/            # Custom plugins
-- src/
-  ├── assets/         # Asset files
-  ├── components/     # Components
-  ├── content/        # Content collections
-  ├── helpers/        # Business logic
-  ├── pages/          # Pages
-  └── typings/        # Common types
-```
+## Starting a Band and Stuff
 
-> Articles are stored in the `src/content/post` directory, supporting markdown and mdx formats. The filename is the path name. For example, `src/content/post/my-first-post.md` => `https://your-blog.com/blog/my-first-post`.
+Fast forward to 2008 when I entered middle school. I asked my parents to buy me an electric guitar. I wanted to learn how to play so bad. I started a band with my childhood best friend Bobby. It sounded very cool since Billie Joe and Mike Dirnt were also schoolmates. I tried to write quirky and edgy punk songs in English. Even tried to come up with a 9-minute song like Jesus of Suburbia.
 
-## Configuration
+Then 2010 came around and I started a band with Lefawigi (still playing, writing, and performing music to this day). That single moment of discovering American Idiot made me who I am today (in terms of being an amateur musician and songwriter).
 
-Theme configuration is done through `slate.config.ts` in the root directory.
+The rest is growing up. I went to high school and loved (most of) the trilogy album. I went to college loving Revolution Radio. Then just after getting my degree, Bobby and I had a chat full of excitement about the Hella Mega Tour which will come to Bangkok in 2020.
 
-| Option | Description | Type | Default |
-| --- | --- | --- | --- |
-| site | Final deployment link | `string` | - |
-| title | Website title | `string` | - |
-| description | Website description | `string` | - |
-| lang | Language | `string` | `zh-CN` |
-| theme | Theme | `{ mode: 'auto' | 'light' | 'dark', enableUserChange: boolean }` | `{ mode: 'auto', enableUserChange: true }` |
-| avatar | Avatar | `string` | - |
-| sitemap | Website sitemap configuration | [SitemapOptions](https://docs.astro.build/en/guides/integrations-guide/sitemap/)  | - |
-| readTime | Show reading time | `boolean` | `false` |
-| lastModified | Show last modified time | `boolean` | `false` |
-| algolia | Docsearch configuration | `{ appId: string, apiKey: string, indexName: string }` | - |
-| follow | Follow subscription authentication configuration | `{ feedId: string, userId: string }` | - |
-| footer | Website footer configuration | `{ copyright: string }` | - |
+## 2020 Sucks
 
-### Algolia Application
+We even created a spreadsheet to plan our budget and itinerary when we get to Thailand and watch Green Day for the first time.
 
-1. Deploy your site first
-2. Apply for an `apiKey` at [algolia](https://docsearch.algolia.com/apply/)
-3. After successful application, configure `algolia` in `slate.config.ts`
-4. Redeploy
+But then Covid-19 happened, which made Green Day cancel their Asia tour at that time. So life just goes on. We became adults with responsibilities, jobs, and bills to pay. It never occurred to me that I would watch Green Day as a married man lol.
 
-### Follow Subscription Authentication
+# Finally
 
-1. Register a [follow](https://follow.is/) account
-2. Deploy your site
-3. Click the `+` button on `follow`, select `RSS` subscription, and enter the `rss` link (usually `[site]/rss.xml`, where `site` is the value of `site` in `slate.config.ts`)
-4. Redeploy
+Time flew super fast and it's 2024. Suddenly there were the Saviors tour all across Europe and North America. Some of the people I know were studying/working in Europe and got to watch Green Day. I never felt so envious.
 
-## Article Frontmatter Description
+So when Green Day announced their comeback to Indonesia since their last time in 1996, I was stoked. I purchased the tickets with my band and Bobby and we got to experience the one thing we could only watch on YouTube. It felt surreal until they finally showed up to the stage, kicking ass and rocking out to the album that got me hooked in the first place.
 
-| Option | Description | Type | Required |
-| --- | --- | --- | --- |
-| title | Article title | `string` | Yes |
-| description | Article description | `string` | No |
-| tags | Article tags | `string[]` | No |
-| draft | Whether it's a draft. When not provided or `false`, `pubDate` must be provided; drafts are only visible in local preview | `boolean` | No |
-| pubDate | Article publication date | `date` | No, required when `draft` is `false` |
+The show's experience was admittedly not much. I was on the far back side of the stage so there was not much to see directly. I even sprained my ankle in a moshpit during St. Jimmy. But it was all worth it.
 
-**For more details, check the `src/content/config.ts` file**
-
-### Example
-
-```md
----
-title: 40 questions
-description: This repo maintains revisons and translations to the list of 40 questions I ask myself each year and each decade.
-tags:
-  - Life
-  - Thinking
-  - Writing
-pubDate: 2025-01-06
----
-```
-
-## Markdown Syntax Support
-
-In addition to standard Markdown syntax, the following extended syntax is supported:
-
-### Basic Syntax
-- Headers, lists, blockquotes, code blocks and other basic syntax
-- Tables
-- Links and images
-- **Bold**, *italic*, and ~strikethrough~ text
-
-### Extended Syntax
-#### Container syntax
-Using `:::` markers
-  ```md
-  :::info
-  This is an information prompt
-  :::
-  ```
-  The result will be displayed as:
-
-  :::info
-  This is an information prompt
-  :::
-
-#### LaTeX Mathematical Formulas
-  - Inline formula: $E = mc^2$
-  - Block formula: $$ E = mc^2 $$
-
-#### Support for image captions
-  ```md
-  ![Image caption](image-url)
-  ```
-The result will be displayed as:
-
-![Slate Blog Preview](https://pub-acdbc21bc3964d18a684b0c51010a4e5.r2.dev/slate-blog-preview.png)
-  
-## Updates
-
-### Version 1.1
-- Upgraded to support [Tailwind CSS v4.0](https://tailwindcss.com/blog/tailwindcss-v4)
-- Added dark mode support
-- Fixed known issues
-
+I know it's kinda cheesy writing a whole blog post about a band that I loved from my childhood. But hey, this is why I started this thing in the first place so I can yap about anything I want on my own terms. See you in the next posts.
