@@ -1,13 +1,13 @@
 ---
-title: About Slate Blog
-description: I use Obsidian to think, take notes, write essays, and publish this site. This is my bottom-up approach to note-taking and organizing things I am interested in. It embraces chaos and laziness to create emergent structure.
+title: Green Day (finally!)
+description: That's it! That's the blog title. I used to be able to only see them on YouTube. All those huge stages, imagining myself spinning in that moshpit during American Idiot. 2025 is the year I finally put that dream into reality. The best part I get to do it with my own band and my childhood best friend, who's also a massive Green Day fan.
 tags:
-  - Dev
-  - Tailwind
-  - Astro
-  - Design
-pubDate: 2025-01-21
+  - Music
+  - Personal
+pubDate: 2025-02-16
 ---
+
+![Me standing in front of the Green Day concert gate!](/public/green-day.jpg "Me at Green Day Concert")
 
 ## Why We build it?
 We love writing and sharing, and we also appreciate great internet products. So we created this minimalist blogging product, focusing on content itself, providing a smooth and pure writing and reading experience, and built on the latest technology framework to make it faster and lighter.
@@ -23,31 +23,6 @@ It also works seamlessly with [Obsidian](https://obsidian.md/), helping you turn
 - Default RSS generation with Follow subscription authentication
 - Integrated Algolia search
 - Complete SEO optimization to improve search engine rankings
-
-## 🪜 Framework
-
-- Astro + React + Typescript  
-- Tailwindcss + @radix-ui/colors
-  - Updated to [Tailwind CSS v4.0](https://tailwindcss.com/blog/tailwindcss-v4) (Jan 10, 2025)
-- Docsearch
-
-## 🔨 Usage
-
-```bash
-# Start local server
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-
-# Build
-npm run build
-# or
-yarn build
-# or
-pnpm build
-```
 
 ## 🗂 Directory Structure
 
