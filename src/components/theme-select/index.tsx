@@ -2,7 +2,7 @@ import { useMemo, useState, useEffect, type ReactNode } from 'react';
 import DesktopOutlined from '@/assets/images/desktop-outlined.svg?react';
 import SunOutlined from '@/assets/images/sun-outlined.svg?react';
 import MoonOutlined from '@/assets/images/moon-outlined.svg?react';
-import stateConfig from '~@/slate.config';
+import slateConfig from '~@/slate.config';
 import { setThemeMode } from '@/helpers/utils';
 import type { ThemeOptions } from '@/typings/config';
 import { ThemeValue } from '@/typings/global';
@@ -35,7 +35,7 @@ const ThemeSelect = () => {
       setCurrentTheme(theme);
       return;
     }
-    const presetTheme = (stateConfig.theme as ThemeOptions).mode;
+    const presetTheme = (slateConfig.theme as ThemeOptions).mode;
     setCurrentTheme(presetTheme as ThemeValue);
   }, []);
 

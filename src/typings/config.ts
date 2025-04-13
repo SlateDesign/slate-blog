@@ -1,5 +1,3 @@
-import type { SitemapOptions } from '@astrojs/sitemap';
-
 export const languages = ['zh-CN', 'en-US'] as const;
 export type LangType = (typeof languages)[number];
 
@@ -36,16 +34,12 @@ type SocialLinkIcon =
   | { svg: string };
 
 export interface SlateConfig {
-  /** Final deployment link */
-  site: string;
   /** Language */
   lang?: LangType;
   /** Theme */
   theme?: ThemeOptions;
   /** Avatar */
   avatar?: string;
-  /** Sitemap configuration */
-  sitemap?: SitemapOptions;
   /** Website title */
   title: string;
   /** Website description */

@@ -40,7 +40,7 @@ const posts = [...postCollection]
   .map((post) => ({
     id: post.id,
     slug: post.slug,
-    url: `/blog/${post.slug}`,
+    url: `${import.meta.env.BASE_URL}/blog/${post.slug}`,
     data: post.data,
   }));
 ---

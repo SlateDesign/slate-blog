@@ -16,16 +16,10 @@ import { remarkModifiedTime } from './plugins/remark-modified-time';
 import { remarkReadingTime } from './plugins/remark-reading-time';
 import slateConfig from './slate.config';
 
-function computedIntegrations() {
-  const result = [astroExpressiveCode(), mdx(), react(), sitemap(slateConfig.sitemap)];
-
-  return result;
-}
-
 function generateAstroConfigure() {
   const astroConfig = {
-    site: slateConfig.site,
-    integrations: computedIntegrations(),
+    site: 'https://slate-blog-demo.vercel.app',
+    integrations: [astroExpressiveCode(), mdx(), react(), sitemap()],
     markdown: {
       remarkPlugins: [
         remarkGemoji,

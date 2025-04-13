@@ -1,7 +1,7 @@
 /*
  * @file: Configuration handler
  */
-import type { SlateConfig, ThemeOptions } from '@/typings/config';
+import type { SlateConfig } from '@/typings/config';
 
 /** Default configuration */
 const defaultConfig: Partial<SlateConfig> = {
@@ -15,19 +15,13 @@ const defaultConfig: Partial<SlateConfig> = {
 };
 
 export function defineConfig(config: SlateConfig): SlateConfig {
-  const mergedConfig: Partial<SlateConfig> = {};
-
-  if (typeof config.theme === 'string') {
-    mergedConfig.theme = {
-      ...(defaultConfig.theme as ThemeOptions),
-      mode: config.theme,
-    };
-  } else {
-    mergedConfig.theme = {
-      ...(defaultConfig.theme as ThemeOptions),
-      ...config.theme,
-    };
+  return {
+    ...defaultConfig,
+    ...config,
+    theme: {
+      ...defaultConfig.theme,
+      ...config.theme
+    } as SlateConfig['theme']
   }
-
-  return Object.assign({}, defaultConfig, config, mergedConfig);
 }
+

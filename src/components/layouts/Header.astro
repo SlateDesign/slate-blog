@@ -1,18 +1,20 @@
 ---
 import slateConfig from '~@/slate.config';
+import { processUrl } from '@/helpers/utils';
 
 interface Props {
   avatar?: string;
 }
 
 const { avatar = slateConfig.avatar } = Astro.props;
+const avatarURL = avatar ? processUrl(avatar) : '';
 ---
 
 <header>
   <div class="mb-9 h-14 w-14 whitespace-nowrap text-[0px]">
     <img
       class="block h-full w-full rounded-full border-2 border-white bg-slate2 shadow-xs outline-1 outline-slate3"
-      src={avatar}
+      src={avatarURL}
       alt={slateConfig.title}
       draggable="false"
     />
