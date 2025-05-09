@@ -7,7 +7,7 @@ tags:
 pubDate: 2025-02-16
 ---
 
-![Me standing in front of the Green Day concert gate!](https://raw.githubusercontent.com/IrfanKurnia33/etam-blog/refs/heads/main/public/green-day.jpg "Me at Green Day Concert")
+![Me standing in front of the Green Day concert gate!](/green-day-1.jpg "Me at Green Day Concert")
 
 ## A Cassette and a Bootleg DVD
 When I was about 8 years old, I liked to go through my brother and sister's stuff to play around. This was when I discovered a black cassette with an illustration of a hand holding a grenade. It read "American Idiot" which sounded so strange to me.
@@ -34,7 +34,7 @@ We even created a spreadsheet to plan our budget and itinerary when we get to Th
 
 But then Covid-19 happened, which made Green Day cancel their Asia tour at that time. So life just goes on. We became adults with responsibilities, jobs, and bills to pay. It never occurred to me that I would watch Green Day as a married man lol.
 
-# Finally
+## Finally
 
 Time flew super fast and it's 2024. Suddenly there were the Saviors tour all across Europe and North America. Some of the people I know were studying/working in Europe and got to watch Green Day. I never felt so envious.
 

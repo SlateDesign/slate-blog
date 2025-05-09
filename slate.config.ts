@@ -6,7 +6,7 @@ import { defineConfig } from './src/helpers/config-helper';
 export default defineConfig({
   lang: 'en-US',
   site: 'https://irfankurnia.com',
-  avatar: '/avatar.png',
+  avatar: '/avatar1.jpg',
   title: 'Erratic Thoughts and More',
   description: 'A Personal Journal of Irfan Kurnia.',
   lastModified: true,

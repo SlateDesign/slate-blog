@@ -1,3 +1,4 @@
+@import url('https://fonts.googleapis.com/css2?family=Libre+Baskerville:ital,wght@0,400;0,700;1,400&family=Sora:wght@400;500;600;700&display=swap');
 @import "tailwindcss";
 @import "@radix-ui/colors/gray.css";
 @import "@radix-ui/colors/blue.css";
@@ -136,8 +137,35 @@
   --padding-18: 4.5rem;
 
   --transition-property-left: left;
+
+  --font-heading: 'Sora', sans-serif;
+  --font-body: 'Hanken Grotesk', sans-serif;
+  --text-base: 1.3rem;
+  --slate-12: #d0d0d0;
+  --slate-11: #d0d0d0;
 }
 
 body {
   @apply text-sm text-slate12;
+  font-family: var(--font-body);
+}
+
+h1, h2, h3, h4, h5, h6 {
+  font-family: var(--font-heading);
+}
+
+/* Update font-family for headings */
+h1, h2, h3, h4, h5, h6 {
+  font-family: 'Sora', sans-serif;
+}
+
+/* Increase --text-base from 1rem to 1.4rem */
+:root {
+  --text-base: 1.3rem;
+}
+
+/* Change --slate-12 from #edeef0 to #d0d0d0 */
+:root {
+  --slate-12: #d0d0d0;
+  --slate-11: #d0d0d0;
 }
