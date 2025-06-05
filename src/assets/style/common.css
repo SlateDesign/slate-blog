@@ -141,8 +141,8 @@
   --font-heading: 'Sora', sans-serif;
   --font-body: 'Hanken Grotesk', sans-serif;
   --text-base: 1.3rem;
-  --slate-12: #d0d0d0;
-  --slate-11: #d0d0d0;
+  --slate-12: #343434;
+  --slate-11: #343434;
 }
 
 body {
@@ -166,6 +166,11 @@ h1, h2, h3, h4, h5, h6 {
 
 /* Change --slate-12 from #edeef0 to #d0d0d0 */
 :root {
+  --slate-12: #343434;
+  --slate-11: #343434;
+}
+
+.dark {
   --slate-12: #d0d0d0;
   --slate-11: #d0d0d0;
 }
