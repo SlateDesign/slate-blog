@@ -17,6 +17,7 @@
 - 支持 RSS 订阅和 Follow 认证
 - 支持 Algolia 搜索
 - 完善的 SEO 支持
+- 横向多图布局，支持自动分栏排列
 
 ## 🪜 框架
 
@@ -167,8 +168,12 @@ pubDate: 2025-01-06
   ```
   
 ## 更新日志
-### 版本 1.2.0
+### 版本 1.3.0
 - 支持显示社交链接
+- 优化 RSS 生成
+- 添加同步最新版本脚本
+
+### 版本 1.2.0
 - 支持多语言（中文和英语）
 - 修复已知问题
 
@@ -179,3 +184,7 @@ pubDate: 2025-01-06
 - 升级支持 [Tailwind CSS v4.0](https://tailwindcss.com/blog/tailwindcss-v4)
 - 支持深色模式
 - 修复已知问题
+
+## Star
+
+[![Star History Chart](https://api.star-history.com/svg?repos=SlateDesign/slate-blog&type=Date)](https://www.star-history.com/#SlateDesign/slate-blog&Date)

@@ -150,4 +150,77 @@
   .heti-adjacent-quarter {
     @apply me-[-0.25em];
   }
+
+  /* 两张图片分栏 */
+  .rehype-figure-container:has(> .rehype-figure:nth-child(2)) {
+    column-count: 2;
+    column-gap: 8px;
+    @apply my-1.5;
+  }
+
+  /* 三张图片分栏 */
+  .rehype-figure-container:has(> .rehype-figure:nth-child(3)) {
+    column-count: 3;
+    column-gap: 8px;
+    @apply my-1.5;
+  }
+
+  /* 四张图片分栏 */
+  .rehype-figure-container:has(> .rehype-figure:nth-child(4)) {
+    column-count: 4;
+    column-gap: 8px;
+    @apply my-1.5;
+  }
+
+  /* 五张图片分栏 */
+  .rehype-figure-container:has(> .rehype-figure:nth-child(5)) {
+    column-count: 5;
+    column-gap: 8px;
+    @apply my-1.5;
+  }
+
+  /* 六张图片分栏 */
+  .rehype-figure-container:has(> .rehype-figure:nth-child(6)) {
+    column-count: 4;
+    column-gap: 8px;
+    @apply my-1.5;
+  }
+
+  /* 处理图片显示 */
+  .rehype-figure-container:has(> .rehype-figure:nth-child(2)) .rehype-figure,
+  .rehype-figure-container:has(> .rehype-figure:nth-child(3)) .rehype-figure,
+  .rehype-figure-container:has(> .rehype-figure:nth-child(4)) .rehype-figure,
+  .rehype-figure-container:has(> .rehype-figure:nth-child(5)) .rehype-figure,
+  .rehype-figure-container:has(> .rehype-figure:nth-child(6)) .rehype-figure {
+    @apply relative mb-2 break-inside-avoid;
+
+    figcaption {
+      @apply absolute overflow-hidden overflow-ellipsis max-w-[calc(100%-16px)] bottom-2 right-2 bg-black/50 rounded-lg px-2 py-1 text-white;
+    }
+  }
+
+  .rehype-figure-container:has(> .rehype-figure:nth-child(2)) img,
+  .rehype-figure-container:has(> .rehype-figure:nth-child(3)) img,
+  .rehype-figure-container:has(> .rehype-figure:nth-child(4)) img,
+  .rehype-figure-container:has(> .rehype-figure:nth-child(5)) img,
+  .rehype-figure-container:has(> .rehype-figure:nth-child(6)) img {
+    @apply m-0 border-slate6 rounded-2xl border;
+  }
+
+  /* 针对6图模式调整间距 */
+  .rehype-figure-container:has(> .rehype-figure:nth-child(6)) .rehype-figure {
+    @apply mb-2;
+  }
+
+  /* 响应式设计 */
+  @media (max-width: 768px) {
+    .rehype-figure-container:has(> .rehype-figure:nth-child(2)),
+    .rehype-figure-container:has(> .rehype-figure:nth-child(3)),
+    .rehype-figure-container:has(> .rehype-figure:nth-child(4)),
+    .rehype-figure-container:has(> .rehype-figure:nth-child(5)),
+    .rehype-figure-container:has(> .rehype-figure:nth-child(6)) {
+      column-count: 1;
+      column-gap: 0;
+    }
+  }
 }

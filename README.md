@@ -18,6 +18,7 @@ It also works seamlessly with [Obsidian](https://obsidian.md/), helping you turn
 - Built-in RSS feed with Follow authentication
 - Integrated Algolia search functionality
 - Comprehensive SEO optimization for better search rankings
+- Horizontal multi-image layout with automatic column distribution
 
 ## 🪜 Framework
 
@@ -170,8 +171,12 @@ Using `:::` markers
   ```
   
 ## Updates
-### Version 1.2.0
+### Version 1.3.0
 - Support Social Links
+- Optimize RSS article detail generation.
+- Add a script to synchronize the latest slate-blog version
+  
+### Version 1.2.0
 - Support i18n (English and Chinese)
 - Fixed known issues
 
@@ -182,3 +187,7 @@ Using `:::` markers
 - Upgraded to support [Tailwind CSS v4.0](https://tailwindcss.com/blog/tailwindcss-v4)
 - Added dark mode support
 - Fixed known issues
+
+## Star History
+
+[![Star History Chart](https://api.star-history.com/svg?repos=SlateDesign/slate-blog&type=Date)](https://www.star-history.com/#SlateDesign/slate-blog&Date)

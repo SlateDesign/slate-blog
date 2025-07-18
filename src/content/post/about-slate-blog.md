@@ -162,8 +162,12 @@ The result will be displayed as:
   
 ## Updates
 
-### Version 1.2.0
+### Version 1.3.0
 - Support Social Links
+- Optimize RSS article detail generation.
+- Add a script to synchronize the latest slate-blog version
+  
+### Version 1.2.0
 - Support i18n (English and Chinese)
 - Fixed known issues
 
