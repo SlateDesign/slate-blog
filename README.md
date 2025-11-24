@@ -2,7 +2,7 @@
 
 English · [中文](./README-zh_CN.md)
 
-## Why We build it?
+## Why did we build it?
 
 We love writing and sharing, and we appreciate well-crafted products. That’s why we created this minimalist theme, focusing on content itself, providing a smooth and pure writing and reading experience. Built on the latest framework, it’s faster, lighter, and more efficient.
 
