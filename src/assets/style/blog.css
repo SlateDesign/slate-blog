@@ -84,20 +84,35 @@
     }
   }
 
-  table {
-    @apply ring-slate4 my-6 w-full border-collapse rounded-xl ring-1;
-    display: block;
+  .table-scroll {
+    @apply ring-slate4 my-6 w-full rounded-xl ring-1;
+    overflow: hidden;
     overflow-x: auto;
+  }
+
+  .table-scroll > table {
+    @apply border-collapse;
+    width: max-content;
+    min-width: 100%;
+    margin: 0;
+    border: 0;
+    border-radius: 0;
+    box-shadow: none;
     white-space: nowrap;
+  }
 
-    thead {
-      @apply border-slate4 bg-slate3 border-b text-left;
-    }
+  .table-scroll > table thead {
+    @apply border-slate4 bg-slate3 border-b text-left;
+  }
 
-    th,
-    td {
-      @apply border-slate4 border-b px-4 py-3;
-    }
+  .table-scroll > table th,
+  .table-scroll > table td {
+    @apply border-slate4 border-b px-4 py-3;
+  }
+
+  .table-scroll > table tbody tr:last-child th,
+  .table-scroll > table tbody tr:last-child td {
+    @apply border-b-0;
   }
 
   blockquote {
@@ -142,23 +157,23 @@
 
   .expressive-code {
     @apply mb-6;
+  }
 
-    figure,
-    figure.expressive-code,
-    .expressive-code figure {
-      border: 1px solid var(--slate-6) !important;
-      border-radius: 1rem !important;
-      box-shadow: none !important;
-    }
+  .expressive-code figure,
+  figure.expressive-code {
+    border: 1px solid var(--slate-6) !important;
+    border-radius: 1rem !important;
+    box-shadow: none !important;
+    overflow: hidden !important;
+  }
 
-    pre,
-    .expressive-code pre,
-    figure pre {
-      @apply overflow-x-auto;
-      max-width: 100%;
-      border-radius: 1rem !important;
-      box-shadow: none !important;
-    }
+  .expressive-code pre,
+  figure.expressive-code pre {
+    @apply overflow-x-auto;
+    max-width: 100%;
+    border: 0 !important;
+    border-radius: 0 !important;
+    box-shadow: none !important;
   }
 
   /* 两张图片分栏 */

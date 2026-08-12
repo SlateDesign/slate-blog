@@ -171,13 +171,33 @@ assert.match(
 );
 assert.match(
   blogStyles,
-  /table\s*\{[\s\S]*?display:\s*block;[\s\S]*?overflow-x:\s*auto/,
-  'wide tables must scroll inside the article instead of widening the page',
+  /\.table-scroll\s*\{[\s\S]*?@apply\s+ring-slate4\s+my-6\s+w-full\s+rounded-xl\s+ring-1;[\s\S]*?overflow:\s*hidden;[\s\S]*?overflow-x:\s*auto;/,
+  'the table wrapper must own spacing, frame, clipping, and horizontal scrolling',
 );
 assert.match(
   blogStyles,
-  /\.expressive-code\s*\{[\s\S]*?pre[\s\S]*?overflow-x-auto/,
-  'code blocks must scroll horizontally inside their frame',
+  /\.table-scroll\s*>\s*table\s*\{[\s\S]*?border-collapse[\s\S]*?width:\s*max-content;[\s\S]*?min-width:\s*100%/,
+  'the table inside the wrapper must retain native table layout and fill at least the frame width',
+);
+assert.doesNotMatch(
+  blogStyles,
+  /\.table-scroll\s*>\s*table\s*\{[\s\S]*?(?:display\s*:|overflow-x\s*:)/,
+  'the table must not become the scrolling frame',
+);
+assert.match(
+  blogStyles,
+  /\.table-scroll\s*>\s*table\s+tbody\s+tr:last-child\s+th,\s*\.table-scroll\s*>\s*table\s+tbody\s+tr:last-child\s+td\s*\{[\s\S]*?border-b-0/,
+  'the final table row must not add a bottom separator',
+);
+assert.match(
+  blogStyles,
+  /\.expressive-code\s+figure,\s*figure\.expressive-code\s*\{[\s\S]*?border:\s*1px\s+solid\s+var\(--slate-6\)\s*!important;[\s\S]*?border-radius:\s*1rem\s*!important;[\s\S]*?overflow:\s*hidden\s*!important/,
+  'the Expressive Code figure must be the single clipping frame',
+);
+assert.match(
+  blogStyles,
+  /\.expressive-code\s+pre,\s*figure\.expressive-code\s+pre\s*\{[\s\S]*?overflow-x-auto[\s\S]*?border:\s*0\s*!important;[\s\S]*?border-radius:\s*0\s*!important;[\s\S]*?box-shadow:\s*none\s*!important/,
+  'the code pre must scroll without adding a second frame',
 );
 assert.doesNotMatch(
   blogStyles,
