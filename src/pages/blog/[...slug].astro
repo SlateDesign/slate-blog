@@ -8,8 +8,10 @@ import Button from '@/components/button';
 import AffixTitle from '@/components/affix-title';
 import Toc from '@/components/toc';
 import CodeGroupEvent from '@/components/code-group-event';
+import RelatedPosts from '@/components/related-posts/index.astro';
 import slateConfig from '~@/slate.config';
 import { getFullTitle } from '@/helpers/utils';
+import { getRelatedPosts } from '@/helpers/related-posts';
 import 'remark-block-containers/css';
 import '@/assets/style/blog.css';
 
@@ -28,6 +30,20 @@ type Props = CollectionEntry<'post'>;
 
 const post = Astro.props;
 const { Content, remarkPluginFrontmatter, headings } = await post.render();
+const allPosts = slateConfig.relatedPosts?.enabled
+  ? await getCollection('post', ({ data }) => data.draft !== true)
+  : [];
+const relatedPosts = slateConfig.relatedPosts?.enabled
+  ? getRelatedPosts(post, allPosts, slateConfig.relatedPosts.limit).map(
+      (relatedPost) => ({
+        title: relatedPost.data.title,
+        slug: relatedPost.slug,
+        description: relatedPost.data.description,
+        pubDate: relatedPost.data.pubDate!,
+        tags: relatedPost.data.tags,
+      }),
+    )
+  : [];
 const lastModifiedDate = dayjs(
   remarkPluginFrontmatter.lastModified
     ? remarkPluginFrontmatter.lastModified
@@ -80,6 +96,15 @@ const formattedPubDate = pubDate.isSame(dayjs(), 'year')
         <div class="text-slate8">
           {i18next.t('blog.lastModified')} {lastModified}
         </div>
+      )
+    }
+    {
+      relatedPosts.length > 0 && (
+        <RelatedPosts
+          posts={relatedPosts}
+          heading={i18next.t('blog.relatedPosts')}
+          lang={slateConfig.lang ?? 'zh-CN'}
+        />
       )
     }
   </div>

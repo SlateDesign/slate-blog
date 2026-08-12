@@ -77,6 +77,7 @@ pnpm build
 | sitemap | 网站 sitemap 配置 | [SitemapOptions](https://docs.astro.build/zh-cn/guides/integrations-guide/sitemap/) | - |
 | readTime | 是否显示阅读时间 | `boolean` | `false` |
 | lastModified | 是否显示最后修改时间 | `boolean` | `false` |
+| relatedPosts | 相关文章推荐 | `{ enabled?: boolean, limit?: number }` | `{ enabled: false, limit: 3 }` |
 | algolia | docsearch 配置 | `{ appId: string, apiKey: string, indexName: string }` | - |
 | follow | follow 订阅认证配置 | `{ feedId: string, userId: string }` | - |
 | footer | 网站底部配置 | `{ copyright: string }` | - |
@@ -128,6 +129,19 @@ type SocialLinkIcon =
 
 **详细可以查看 `src/content/config.ts` 文件**
 
+首页固定支持按标签筛选文章。开启相关文章后，推荐分数由 70% 的标签重合度和
+30% 的发布时间接近程度组成。
+
+```ts
+export default defineConfig({
+  // 其他配置……
+  relatedPosts: {
+    enabled: true,
+    limit: 3,
+  },
+});
+```
+
 ### 示例
 
 ```md
@@ -170,6 +184,11 @@ pubDate: 2025-01-06
   ```
   
 ## 更新日志
+### 版本 1.5.0
+- 首页固定支持按标签筛选文章
+- 新增可选的相关文章推荐，默认关闭
+- 新增稳定的推荐排序和本地化内容发现状态
+
 ### 版本 1.4.0
 - 使用 Pangu 替换 Heti，移除文章页运行时 CDN 依赖
 - 支持代码块浅色、深色主题自动切换

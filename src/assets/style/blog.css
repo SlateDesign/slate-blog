@@ -22,6 +22,10 @@
     @apply text-slate12 my-6 mt-4 text-base leading-relaxed;
   }
 
+  .related-posts-description {
+    @apply my-0 text-sm leading-relaxed;
+  }
+
   a {
     @apply text-indigo11 decoration-indigo6 underline-offset-4 transition-all hover:underline;
   }
