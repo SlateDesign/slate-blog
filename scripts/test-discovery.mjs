@@ -136,7 +136,6 @@ assert.deepEqual(
 const read = (path) =>
   readFileSync(new URL(`../${path}`, import.meta.url), 'utf8');
 const homePage = read('src/pages/index.astro');
-const tagFilter = read('src/components/tag-filter-posts/index.tsx');
 const articlePage = read('src/pages/blog/[...slug].astro');
 const relatedPostsComponent = read('src/components/related-posts/index.astro');
 const english = read('src/i18n/lang/en-us.ts');
@@ -144,8 +143,13 @@ const chinese = read('src/i18n/lang/zh-cn.ts');
 
 assert.match(
   homePage,
-  /TagFilterPosts/,
-  'home page must render the fixed-enabled tag filter',
+  /posts\.map\(\(post\) =>/,
+  'home page must server-render every article instead of delegating the list to hydration',
+);
+assert.doesNotMatch(
+  homePage,
+  /TagFilterPosts|client:(load|only|idle|visible)[^>]*posts=/,
+  'the core article list must not depend on a client island',
 );
 assert.doesNotMatch(
   homePage,
@@ -163,14 +167,14 @@ assert.doesNotMatch(
   'home page must not serialize the complete content entry data',
 );
 assert.match(
-  tagFilter,
+  homePage,
   /<button[\s\S]*aria-pressed=/,
   'tags must use toggle buttons',
 );
 assert.match(
-  tagFilter,
-  /useState<string \| null>\(null\)/,
-  'the aggregate option must use a non-string sentinel instead of its localized label',
+  homePage,
+  /data-tag=/,
+  'tag buttons must use a value separate from their label',
 );
 assert.doesNotMatch(
   homePage,
@@ -178,21 +182,21 @@ assert.doesNotMatch(
   'client post payload must omit a redundant slug',
 );
 assert.match(
-  tagFilter,
-  /posts\.filter\(\(post\) => post\.tags\?\.includes\(activeTag\)\)/,
-  'active tag must filter posts',
+  homePage,
+  /post\.hidden\s*=/,
+  'the enhancement script must filter server-rendered posts',
 );
 assert.match(
-  tagFilter,
+  homePage,
   /scrollIntoView\([\s\S]*behavior:/,
   'tag changes must scroll to the list',
 );
 assert.match(
-  tagFilter,
+  homePage,
   /prefers-reduced-motion/,
   'smooth scrolling must respect reduced motion',
 );
-assert.match(tagFilter, /emptyState/, 'empty results must use localized copy');
+assert.match(homePage, /no-posts/, 'empty results must use localized copy');
 assert.match(english, /noPostsForTag:/, 'English empty-state copy must exist');
 assert.match(chinese, /noPostsForTag:/, 'Chinese empty-state copy must exist');
 assert.match(

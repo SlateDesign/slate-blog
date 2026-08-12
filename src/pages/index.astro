@@ -3,7 +3,6 @@ import { getCollection } from 'astro:content';
 import i18next from '@/i18n';
 import Search from '@/components/search';
 import PageLayout from '@/components/layouts/PageLayout.astro';
-import TagFilterPosts from '@/components/tag-filter-posts';
 // import Button from '@/components/button';
 import slateConfig from '~@/slate.config';
 
@@ -27,8 +26,9 @@ const tagCounts = postCollection.reduce<Record<string, number>>((res, post) => {
 }, {});
 
 const tags = [
-  { name: i18next.t('common.all'), count: postCollection.length },
+  { value: '', name: i18next.t('common.all'), count: postCollection.length },
   ...Object.keys(tagCounts).map((tag) => ({
+    value: tag,
     name: tag,
     count: tagCounts[tag],
   })),
@@ -56,11 +56,102 @@ const posts = [...postCollection]
     />
   </section>
 
-  <TagFilterPosts
-    client:load
-    posts={posts}
-    tags={tags}
-    emptyState={i18next.t('common.noPostsForTag')}
-    lang={slateConfig.lang ?? 'zh-CN'}
-  />
+  <div id="tag-filter">
+    <section id="post-list" class="mb-16 scroll-mt-8">
+      <div class="text-slate12 text-base">
+        {
+          posts.map((post) => (
+            <a
+              class="post-item active:bg-slate4 sm:hover:bg-slate3 flex cursor-pointer flex-col justify-between rounded-lg py-2.5 transition-all active:scale-[0.995] sm:flex-row sm:items-center sm:px-2"
+              href={post.url}
+              title={post.title}
+              data-tags={JSON.stringify(post.tags ?? [])}
+            >
+              <span class="shrink-0">{post.title}</span>
+              <span class="border-slate6 mx-8 hidden h-px w-full grow border-t border-dashed sm:flex" />
+              <time class="text-slate8 shrink-0" datetime={post.pubDate}>
+                {new Date(post.pubDate).toLocaleDateString(slateConfig.lang, {
+                  year: 'numeric',
+                  month: 'short',
+                  day: 'numeric',
+                })}
+              </time>
+            </a>
+          ))
+        }
+        <p id="no-posts" class="text-slate10 hidden py-8 text-center">
+          {i18next.t('common.noPostsForTag')}
+        </p>
+      </div>
+    </section>
+
+    <section class="mb-16">
+      <ul class="text-slate10 flex flex-wrap gap-2 text-base">
+        {
+          tags.map(({ value, name, count }, index) => (
+            <li>
+              <button
+                type="button"
+                data-tag={value}
+                aria-pressed={index === 0 ? 'true' : 'false'}
+                class:list={[
+                  'focus-visible:outline-slate11 cursor-pointer rounded-full px-4 py-2 transition-all focus-visible:outline-2 focus-visible:outline-offset-2',
+                  index === 0
+                    ? 'bg-slate12 text-slate1'
+                    : 'bg-slate3 text-slate10 hover:bg-slate4 hover:text-slate11',
+                ]}
+              >
+                {name}
+                <sup class="ml-1 text-[10px] opacity-70">{count}</sup>
+              </button>
+            </li>
+          ))
+        }
+      </ul>
+    </section>
+  </div>
 </PageLayout>
+
+<script>
+  const filterRoot = document.getElementById('tag-filter');
+  const postList = document.getElementById('post-list');
+  const noPosts = document.getElementById('no-posts');
+
+  filterRoot
+    ?.querySelectorAll<HTMLButtonElement>('button[data-tag]')
+    .forEach((button) => {
+      button.addEventListener('click', () => {
+        const activeTag = button.dataset.tag ?? '';
+        let visibleCount = 0;
+
+        filterRoot
+          .querySelectorAll<HTMLAnchorElement>('.post-item')
+          .forEach((post) => {
+            const tags = JSON.parse(post.dataset.tags ?? '[]') as string[];
+            const visible = activeTag === '' || tags.includes(activeTag);
+            post.hidden = !visible;
+            if (visible) visibleCount++;
+          });
+
+        filterRoot
+          .querySelectorAll<HTMLButtonElement>('button[data-tag]')
+          .forEach((tagButton) => {
+            const selected = tagButton === button;
+            tagButton.setAttribute('aria-pressed', String(selected));
+            tagButton.classList.toggle('bg-slate12', selected);
+            tagButton.classList.toggle('text-slate1', selected);
+            tagButton.classList.toggle('bg-slate3', !selected);
+            tagButton.classList.toggle('text-slate10', !selected);
+          });
+
+        noPosts?.classList.toggle('hidden', visibleCount > 0);
+        const reduceMotion = window.matchMedia(
+          '(prefers-reduced-motion: reduce)',
+        ).matches;
+        postList?.scrollIntoView({
+          behavior: reduceMotion ? 'auto' : 'smooth',
+          block: 'start',
+        });
+      });
+    });
+</script>
