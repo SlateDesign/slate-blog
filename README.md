@@ -19,6 +19,8 @@ It also works seamlessly with [Obsidian](https://obsidian.md/), helping you turn
 - Integrated Algolia search functionality
 - Comprehensive SEO optimization for better search rankings
 - Horizontal multi-image layout with automatic column distribution
+- Pangu spacing for mixed Chinese, Latin text, and numbers
+- Code highlighting that follows the light and dark themes
 
 ## 🪜 Framework
 
@@ -171,6 +173,11 @@ Using `:::` markers
   ```
   
 ## Updates
+### Version 1.4.0
+- Replaced Heti with Pangu and removed the article-page runtime CDN dependency
+- Added light and dark code highlighting themes
+- Improved mobile heading sizes and overflow handling for long code, tables, and images
+
 ### Version 1.3.0
 - Support Social Links
 - Optimize RSS article detail generation.

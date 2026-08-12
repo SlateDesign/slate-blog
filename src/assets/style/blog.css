@@ -2,15 +2,16 @@
 
 .blog-content {
   @apply mb-16;
+  overflow-wrap: break-word;
 
   h1 {
-    @apply text-slate12 mb-2 text-4xl leading-normal font-bold;
+    @apply text-slate12 mb-2 text-3xl leading-normal font-bold sm:text-4xl;
   }
   h2 {
-    @apply text-slate12 mt-8 mb-2 text-3xl leading-normal font-semibold;
+    @apply text-slate12 mt-8 mb-2 text-2xl leading-normal font-semibold sm:text-3xl;
   }
   h3 {
-    @apply text-slate12 my-2 text-2xl leading-normal font-semibold;
+    @apply text-slate12 my-2 text-xl leading-normal font-semibold sm:text-2xl;
   }
 
   h4 {
@@ -32,10 +33,14 @@
 
   img {
     @apply border-slate6 mx-auto my-8 w-full rounded-2xl border;
+    max-width: 100%;
+    height: auto;
   }
 
   code {
     @apply border-slate4 bg-slate3 text-slate11 mx-0.5 rounded-lg border p-0.5 px-1 text-base;
+    word-break: break-all;
+    overflow-wrap: break-word;
   }
 
   .code {
@@ -71,7 +76,10 @@
   }
 
   table {
-    @apply ring-slate4 my-6 w-full border-collapse overflow-hidden rounded-xl ring-1;
+    @apply ring-slate4 my-6 w-full border-collapse rounded-xl ring-1;
+    display: block;
+    overflow-x: auto;
+    white-space: nowrap;
 
     thead {
       @apply border-slate4 bg-slate3 border-b text-left;
@@ -125,30 +133,23 @@
 
   .expressive-code {
     @apply mb-6;
-  }
 
-  heti-spacing {
-    @apply inline;
-  }
+    figure,
+    figure.expressive-code,
+    .expressive-code figure {
+      border: 1px solid var(--slate-6) !important;
+      border-radius: 1rem !important;
+      box-shadow: none !important;
+    }
 
-  .heti-spacing-start {
-    @apply me-[0.25em];
-  }
-
-  .heti-spacing-end {
-    @apply ms-[0.25em];
-  }
-
-  heti-adjacent {
-    @apply inline;
-  }
-
-  .heti-adjacent-half {
-    @apply me-[-0.5em];
-  }
-
-  .heti-adjacent-quarter {
-    @apply me-[-0.25em];
+    pre,
+    .expressive-code pre,
+    figure pre {
+      @apply overflow-x-auto;
+      max-width: 100%;
+      border-radius: 1rem !important;
+      box-shadow: none !important;
+    }
   }
 
   /* 两张图片分栏 */
