@@ -1,9 +1,24 @@
 import assert from 'node:assert/strict';
 import { readFileSync } from 'node:fs';
 import { pangu } from 'pangu';
+import ts from 'typescript';
 
 const read = (path) =>
   readFileSync(new URL(`../${path}`, import.meta.url), 'utf8');
+
+const importTypeScript = async (path) => {
+  const source = read(path);
+  const { outputText } = ts.transpileModule(source, {
+    compilerOptions: {
+      module: ts.ModuleKind.ESNext,
+      target: ts.ScriptTarget.ES2022,
+    },
+    fileName: path,
+  });
+  return import(
+    `data:text/javascript;base64,${Buffer.from(outputText).toString('base64')}`,
+  );
+};
 
 const packageJson = JSON.parse(read('package.json'));
 const astroConfig = read('astro.config.mjs');
@@ -63,6 +78,55 @@ assert.match(
   astroConfig,
   /shadowColor:\s*['"]transparent['"]/,
   'code frames must not add a theme-specific shadow',
+);
+assert.match(
+  astroConfig,
+  /import\s+\{\s*rehypeTableWrapper\s*\}\s+from\s+['"]\.\/plugins\/rehype-table-wrapper['"]/,
+  'Astro must import the table wrapper rehype plugin',
+);
+assert.match(
+  astroConfig,
+  /rehypePlugins:\s*\[\s*rehypeKatex\s*,\s*rehypeFigure\s*,\s*rehypeTableWrapper\s*\]/,
+  'Astro must register the table wrapper after its existing rehype plugins',
+);
+
+const { rehypeTableWrapper } = await importTypeScript(
+  'plugins/rehype-table-wrapper.ts',
+);
+const table = {
+  type: 'element',
+  tagName: 'table',
+  properties: { id: 'comparison' },
+  children: [{ type: 'element', tagName: 'tbody', properties: {}, children: [] }],
+};
+const tree = {
+  type: 'root',
+  children: [
+    { type: 'element', tagName: 'p', properties: {}, children: [] },
+    table,
+  ],
+};
+
+rehypeTableWrapper()(tree);
+
+const wrapper = tree.children[1];
+assert.equal(wrapper.tagName, 'div', 'tables must be wrapped in a div');
+assert.deepEqual(
+  wrapper.properties,
+  { className: ['table-scroll'] },
+  'the wrapper must have the table-scroll class',
+);
+assert.strictEqual(
+  wrapper.children[0],
+  table,
+  'wrapping must preserve the original table node',
+);
+
+rehypeTableWrapper()(tree);
+assert.strictEqual(
+  tree.children[1],
+  wrapper,
+  'tables must be wrapped exactly once across repeated transforms',
 );
 
 assert.match(
