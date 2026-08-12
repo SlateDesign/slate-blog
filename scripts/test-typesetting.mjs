@@ -128,6 +128,16 @@ assert.strictEqual(
   wrapper,
   'tables must be wrapped exactly once across repeated transforms',
 );
+assert.equal(
+  wrapper.children.length,
+  1,
+  'a repeated transform must not add another wrapper inside table-scroll',
+);
+assert.strictEqual(
+  wrapper.children[0],
+  table,
+  'a repeated transform must preserve the original table as the wrapper child',
+);
 
 assert.match(
   blogStyles,

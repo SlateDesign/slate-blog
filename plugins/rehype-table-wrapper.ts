@@ -2,6 +2,9 @@ import type { Element, Root, RootContent } from 'hast';
 
 const isElement = (node: RootContent): node is Element => node.type === 'element';
 
+const isTableScrollWrapper = (node: Element) =>
+  node.tagName === 'div' && node.properties.className?.includes('table-scroll');
+
 export function rehypeTableWrapper(): (tree: Root) => void {
   return (tree) => {
     const wrapTables = (parent: Root | Element) => {
@@ -9,6 +12,8 @@ export function rehypeTableWrapper(): (tree: Root) => void {
         const child = parent.children[index];
 
         if (!isElement(child)) continue;
+
+        if (isTableScrollWrapper(child)) continue;
 
         if (child.tagName === 'table') {
           parent.children[index] = {
