@@ -25,3 +25,6 @@ pnpm-debug.log*
 
 # Obsidian config
 .obsidian/
+
+# Local development plans and specifications
+docs/
