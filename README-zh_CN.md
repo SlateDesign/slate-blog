@@ -18,6 +18,8 @@
 - 支持 Algolia 搜索
 - 完善的 SEO 支持
 - 横向多图布局，支持自动分栏排列
+- 使用 Pangu 优化中英文和数字混排间距
+- 代码块跟随浅色、深色主题切换
 
 ## 🪜 框架
 
@@ -168,6 +170,11 @@ pubDate: 2025-01-06
   ```
   
 ## 更新日志
+### 版本 1.4.0
+- 使用 Pangu 替换 Heti，移除文章页运行时 CDN 依赖
+- 支持代码块浅色、深色主题自动切换
+- 优化移动端文章标题以及长代码、表格和图片的溢出表现
+
 ### 版本 1.3.0
 - 支持显示社交链接
 - 优化 RSS 生成
@@ -185,6 +192,19 @@ pubDate: 2025-01-06
 - 支持深色模式
 - 修复已知问题
 
-## Star
+## 使用本主题的博客
+以下是一些使用这个主题搭建的博客：
+- [Bluepikachu](https://bluepika.life/)
+- [Chieh的随笔](https://blog.chieh.nyc.mn/)
+- [Feazur](https://blog.feazur.com/)
+- [Folay's Blog](https://www.folay.top/)
+- [LeeZhian](https://leezhian.com/)
+- [nmsisecho](https://astro-example-liard.vercel.app/)
+- [Randy's Blog](https://lutaonan.com/)
+- [Sulle orme dell'Alfiere Nero](https://sulleormedellalfierenero.pusi77.eu.org/)
+- [三墩冰室](https://lmd.gg/)
+- [小企鹅爸爸的生活](https://www.penguinpapa.life/)
+
+## Star 历史
 
 [![Star History Chart](https://api.star-history.com/svg?repos=SlateDesign/slate-blog&type=Date)](https://www.star-history.com/#SlateDesign/slate-blog&Date)

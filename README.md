@@ -19,6 +19,8 @@ It also works seamlessly with [Obsidian](https://obsidian.md/), helping you turn
 - Integrated Algolia search functionality
 - Comprehensive SEO optimization for better search rankings
 - Horizontal multi-image layout with automatic column distribution
+- Pangu spacing for mixed Chinese, Latin text, and numbers
+- Code highlighting that follows the light and dark themes
 
 ## 🪜 Framework
 
@@ -171,6 +173,11 @@ Using `:::` markers
   ```
   
 ## Updates
+### Version 1.4.0
+- Replaced Heti with Pangu and removed the article-page runtime CDN dependency
+- Added light and dark code highlighting themes
+- Improved mobile heading sizes and overflow handling for long code, tables, and images
+
 ### Version 1.3.0
 - Support Social Links
 - Optimize RSS article detail generation.
@@ -187,6 +194,19 @@ Using `:::` markers
 - Upgraded to support [Tailwind CSS v4.0](https://tailwindcss.com/blog/tailwindcss-v4)
 - Added dark mode support
 - Fixed known issues
+
+## Blogs using this theme
+Here are some blogs built with this theme:
+- [Bluepikachu](https://bluepika.life/)
+- [Chieh的随笔](https://blog.chieh.nyc.mn/)
+- [Feazur](https://blog.feazur.com/)
+- [Folay's Blog](https://www.folay.top/)
+- [LeeZhian](https://leezhian.com/)
+- [nmsisecho](https://astro-example-liard.vercel.app/)
+- [Randy's Blog](https://lutaonan.com/)
+- [Sulle orme dell'Alfiere Nero](https://sulleormedellalfierenero.pusi77.eu.org/)
+- [三墩冰室](https://lmd.gg/)
+- [小企鹅爸爸的生活](https://www.penguinpapa.life/)
 
 ## Star History
 

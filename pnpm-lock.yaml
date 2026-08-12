@@ -62,6 +62,9 @@ importers:
       mdast-util-to-string:
         specifier: ^4.0.0
         version: 4.0.0
+      pangu:
+        specifier: 7.2.1
+        version: 7.2.1
       react:
         specifier: ^18.3.1
         version: 18.3.1
@@ -114,6 +117,9 @@ importers:
       '@typescript-eslint/parser':
         specifier: ^8.12.2
         version: 8.14.0(eslint@9.14.0(jiti@2.4.2))(typescript@5.6.3)
+      astro-eslint-parser:
+        specifier: 1.1.0
+        version: 1.1.0(typescript@5.6.3)
       eslint:
         specifier: 9.14.0
         version: 9.14.0(jiti@2.4.2)
@@ -3174,6 +3180,11 @@ packages:
   p-try@2.2.0:
     resolution: {integrity: sha512-R4nPAVTAU0B9D35/Gk3uJf/7XYbQcyohSKdvAxIRSNghFl4e71hVoGnBNQz9cWaXxO2I10KTC+3jMdvvoKw6dQ==}
     engines: {node: '>=6'}
+
+  pangu@7.2.1:
+    resolution: {integrity: sha512-HEWJHmYcJhGz5wGebMaKblzu709wUjzsnJzwdjaowAKQzHIHQDmWGpCbWWPx19Exnv/RaQ3UhUg4LkttWZsbCw==}
+    engines: {node: '>=18.0.0'}
+    hasBin: true
 
   parent-module@1.0.1:
     resolution: {integrity: sha512-GQ2EWRpQV8/o+Aw8YqtfZZPfNRWZYkbidE9k5rpl/hC3vtHHBfGm2Ifi6qWV+coDGkrUKZAxE3Lot5kcsRlh+g==}
@@ -8072,6 +8083,8 @@ snapshots:
   p-timeout@6.1.4: {}
 
   p-try@2.2.0: {}
+
+  pangu@7.2.1: {}
 
   parent-module@1.0.1:
     dependencies:

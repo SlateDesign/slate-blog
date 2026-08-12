@@ -94,13 +94,20 @@ const formattedPubDate = pubDate.isSame(dayjs(), 'year')
   <!-- E 目录 -->
 </PageLayout>
 
-<script src="//unpkg.com/heti/umd/heti-addon.min.js" is:inline></script>
 <script>
+  import { pangu } from 'pangu/browser';
+
   const backBtn = document.getElementById('back');
   backBtn?.addEventListener('click', () => {
     window.location.href = '/';
   });
 
-  const heti = new Heti('.blog-content');
-  heti.autoSpacing();
+  const blogContent = document.querySelector('.blog-content');
+  if (blogContent instanceof HTMLElement) {
+    try {
+      pangu.spacingNode(blogContent);
+    } catch (error) {
+      console.error('Failed to initialize pangu.', error);
+    }
+  }
 </script>
