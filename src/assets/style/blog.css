@@ -26,6 +26,11 @@
     @apply my-0 text-sm leading-relaxed;
   }
 
+  .related-posts-link,
+  .related-posts-link:hover {
+    text-decoration-line: none;
+  }
+
   a {
     @apply text-indigo11 decoration-indigo6 underline-offset-4 transition-all hover:underline;
   }

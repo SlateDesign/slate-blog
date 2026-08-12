@@ -138,6 +138,7 @@ const read = (path) =>
 const homePage = read('src/pages/index.astro');
 const articlePage = read('src/pages/blog/[...slug].astro');
 const relatedPostsComponent = read('src/components/related-posts/index.astro');
+const blogStyles = read('src/assets/style/blog.css');
 const english = read('src/i18n/lang/en-us.ts');
 const chinese = read('src/i18n/lang/zh-cn.ts');
 
@@ -223,6 +224,11 @@ assert.match(
   relatedPostsComponent,
   /post\.tags\?\.slice\(0, 3\)/,
   'at most three tags may be shown',
+);
+assert.match(
+  blogStyles,
+  /\.related-posts-link,\s*\.related-posts-link:hover\s*\{[^}]*text-decoration-line:\s*none/,
+  'related-post cards must suppress the article-link underline on hover',
 );
 assert.match(
   english,
