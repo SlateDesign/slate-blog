@@ -18,6 +18,7 @@ const importTypeScript = async (path) => {
 
 const {
   calculateReadingProgress,
+  buildChatGPTReadingUrl,
   filterTocHeadings,
   getActiveHeadingSlug,
   getHeadingScrollTop,
@@ -54,6 +55,38 @@ assert.equal(
   disabledReadingFeatures.progressiveBlur,
   false,
   'an explicit false must disable progressive blur',
+);
+assert.equal(
+  readingDefaults.readWithChatGPT,
+  false,
+  'the external ChatGPT entry must be disabled by default',
+);
+assert.equal(
+  defineConfig({ ...requiredConfig, readWithChatGPT: true }).readWithChatGPT,
+  true,
+  'explicit configuration must enable the ChatGPT entry',
+);
+
+const chatGPTReadingUrl = buildChatGPTReadingUrl(
+  'https://example.com/base/',
+  'hello world',
+  'Summarize this article:',
+);
+const parsedChatGPTUrl = new URL(chatGPTReadingUrl);
+assert.equal(
+  parsedChatGPTUrl.origin,
+  'https://chatgpt.com',
+  'the reading action must open the public ChatGPT web app',
+);
+assert.equal(
+  parsedChatGPTUrl.searchParams.get('q'),
+  'Summarize this article: https://example.com/base/blog/hello%20world',
+  'the prompt must contain an absolute canonical article URL',
+);
+assert.match(
+  chatGPTReadingUrl,
+  /q=Summarize\+this\+article%3A\+https%3A%2F%2Fexample\.com%2Fbase%2Fblog%2Fhello%2520world/,
+  'the complete prompt and canonical URL must be percent-encoded',
 );
 
 const headings = [
@@ -237,6 +270,11 @@ assert.match(
 assert.match(english, /tableOfContents:/, 'English mobile TOC copy must exist');
 assert.match(chinese, /tableOfContents:/, 'Chinese mobile TOC copy must exist');
 assert.match(
+  mobileTocComponent,
+  /closeLabel:\s*string[\s\S]*?aria-label=\{closeLabel\}/,
+  'the mobile dialog close action must use localized accessible copy',
+);
+assert.match(
   blogStyles,
   /prefers-reduced-motion:\s*reduce[\s\S]*?mobile-toc/,
   'mobile TOC motion must be disabled when reduced motion is preferred',
@@ -291,6 +329,41 @@ assert.match(
   commonStyles,
   /\.affix-title-fallback[\s\S]*?backdrop-filter:/,
   'disabled progressive blur must retain an ordinary backdrop blur',
+);
+assert.match(
+  articlePage,
+  /chatGPTReadingUrl\s*=\s*slateConfig\.readWithChatGPT[\s\S]*?buildChatGPTReadingUrl/,
+  'the ChatGPT URL must be constructed only when explicitly enabled',
+);
+assert.match(
+  articlePage,
+  /slateConfig\.readWithChatGPT\s*&&[\s\S]*?href=\{chatGPTReadingUrl\}/,
+  'the ChatGPT entry must render only when explicitly enabled',
+);
+assert.match(
+  articlePage,
+  /target=["']_blank["'][\s\S]*?rel=["']noopener noreferrer["']/,
+  'the external ChatGPT link must open safely in a new tab',
+);
+assert.match(
+  articlePage,
+  /aria-label=\{i18next\.t\(['"]blog\.readWithChatGPT['"]\)\}/,
+  'the ChatGPT entry must have localized accessible copy',
+);
+assert.match(
+  english,
+  /readWithChatGPT:/,
+  'English ChatGPT entry copy must exist',
+);
+assert.match(
+  chinese,
+  /readWithChatGPT:/,
+  'Chinese ChatGPT entry copy must exist',
+);
+assert.match(
+  articlePage,
+  /text-slate10 flex flex-wrap items-center gap-2/,
+  'article metadata must wrap when optional actions exceed the viewport',
 );
 
 console.log('reading navigation tests passed');

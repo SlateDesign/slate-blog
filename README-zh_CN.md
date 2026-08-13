@@ -3,6 +3,7 @@
 [English](./README.md) · 中文
 
 ## 我们为什么创作这样一个博客主题
+
 我们热爱写作与分享，也很欣赏精致的互联网产品。正因如此，我们创作了这个简洁的博客主题，它专注于内容本身，提供流畅、纯粹的写作与阅读体验。而基于各种现代的技术栈，也让其更快速、轻便和高效。
 
 它还能与 [Obsidian](https://obsidian.md/) 无缝结合，你可以轻松将笔记转化为精致的博客文章。
@@ -78,6 +79,9 @@ pnpm build
 | readTime | 是否显示阅读时间 | `boolean` | `false` |
 | lastModified | 是否显示最后修改时间 | `boolean` | `false` |
 | relatedPosts | 相关文章推荐 | `{ enabled?: boolean, limit?: number }` | `{ enabled: false, limit: 3 }` |
+| readingProgress | 是否在悬浮文章标题中显示圆形阅读进度 | `boolean` | `true` |
+| progressiveBlur | 悬浮文章标题是否使用渐变模糊背景 | `boolean` | `true` |
+| readWithChatGPT | 是否显示外部“与 ChatGPT 一起阅读”入口 | `boolean` | `false` |
 | algolia | docsearch 配置 | `{ appId: string, apiKey: string, indexName: string }` | - |
 | follow | follow 订阅认证配置 | `{ feedId: string, userId: string }` | - |
 | footer | 网站底部配置 | `{ copyright: string }` | - |
@@ -99,14 +103,14 @@ type SocialLinkIcon =
   | 'threads'
   | 'x'
   | 'youtube'
-  | { svg: string }
+  | { svg: string };
 ```
 
 ### algolia 申请
 
 1. 部署网站
 2. 在 [Algolia](https://docsearch.algolia.com/apply/) 申请应用 `apiKey`
-3. 申请完成后且通过，在 `slate.config.ts` 中配置 `algolia` 
+3. 申请完成后且通过，在 `slate.config.ts` 中配置 `algolia`
 4. 重新部署网站
 
 ### Follow 订阅认证
@@ -115,7 +119,6 @@ type SocialLinkIcon =
 2. 部署站点
 3. 在 Follow 点击 `+` 号，选择 `RSS` 订阅，填入 `rss` 链接，一般为 `[site]/rss.xml`, `site` 为 `slate.config.ts` 配置文件中 `site` 的值。
 4. 重新部署网站
-
 
 ## 文章 frontmatter 说明
 
@@ -129,8 +132,7 @@ type SocialLinkIcon =
 
 **详细可以查看 `src/content/config.ts` 文件**
 
-首页固定支持按标签筛选文章。开启相关文章后，推荐分数由 70% 的标签重合度和
-30% 的发布时间接近程度组成。
+首页固定支持按标签筛选文章。开启相关文章后，推荐分数由 70% 的标签重合度和 30% 的发布时间接近程度组成。
 
 ```ts
 export default defineConfig({
@@ -141,6 +143,12 @@ export default defineConfig({
   },
 });
 ```
+
+文章存在章节标题时，桌面和移动目录固定启用。移动目录支持点击遮罩关闭、Escape 关闭、焦点恢复，并遵循系统的减少动态效果设置。
+
+`readingProgress` 只控制圆形进度。将 `progressiveBlur` 设为 `false` 时，悬浮标题仍会显示，并回退为半透明背景和普通毛玻璃效果。
+
+开启 `readWithChatGPT` 后，主题会在新标签页打开 `chatgpt.com`，并在预填问题中包含文章的规范 URL。主题不会调用 ChatGPT API，也不会发送密钥；点击后会离开当前站点，并受 ChatGPT 的隐私政策约束。
 
 ### 示例
 
@@ -155,64 +163,84 @@ tags:
 pubDate: 2025-01-06
 ---
 ```
+
 ## Markdown 语法支持
 
 除了标准的 Markdown 语法外，我们还支持部分扩展语法。
 
 ### 基础语法
+
 - 标题、列表、引用、代码块等基础语法
 - 表格
 - 链接和图片
 - **粗体**、*斜体*和~删除线~文本
 
 ### 扩展语法
+
 #### 容器
+
 使用 `:::` 标记
-  ```md
-  :::info
-  这是一个信息提示
-  :::
-  ```
+
+```md
+:::info这是一个信息提示 :::
+```
 
 #### LaTeX 数学公式
-  - 行内公式: $E = mc^2$
-  - 块级公式: $$ E = mc^2 $$
+
+- 行内公式: $E = mc^2$
+- 块级公式: $$ E = mc^2 $$
 
 #### 支持图片说明
-  ```md
-  ![Image caption](image-url)
-  ```
-  
+
+```md
+![Image caption](image-url)
+```
+
 ## 更新日志
+
+### 版本 1.6.0
+
+- 新增桌面当前章节定位和无障碍移动文章目录
+- 新增圆形阅读进度和默认开启的渐进模糊
+- 新增默认关闭的外部“与 ChatGPT 一起阅读”入口
+
 ### 版本 1.5.0
+
 - 首页固定支持按标签筛选文章
 - 新增可选的相关文章推荐，默认关闭
 - 新增稳定的推荐排序和本地化内容发现状态
 
 ### 版本 1.4.0
+
 - 使用 Pangu 替换 Heti，移除文章页运行时 CDN 依赖
 - 支持代码块浅色、深色主题自动切换
 - 优化移动端文章标题以及长代码、表格和图片的溢出表现
 
 ### 版本 1.3.0
+
 - 支持显示社交链接
 - 优化 RSS 生成
 - 添加同步最新版本脚本
 
 ### 版本 1.2.0
+
 - 支持多语言（中文和英语）
 - 修复已知问题
 
 ### 版本 1.1.1
+
 - 修复已知问题
 
 ### 版本 1.1.0
+
 - 升级支持 [Tailwind CSS v4.0](https://tailwindcss.com/blog/tailwindcss-v4)
 - 支持深色模式
 - 修复已知问题
 
 ## 使用本主题的博客
+
 以下是一些使用这个主题搭建的博客：
+
 - [Bluepikachu](https://bluepika.life/)
 - [Chieh的随笔](https://blog.chieh.nyc.mn/)
 - [Feazur](https://blog.feazur.com/)

@@ -16,9 +16,10 @@ import {
 interface MobileTocProps {
   dataSource?: MarkdownHeading[];
   label: string;
+  closeLabel: string;
 }
 
-function MobileToc({ dataSource = [], label }: MobileTocProps) {
+function MobileToc({ dataSource = [], label, closeLabel }: MobileTocProps) {
   const headings = useMemo(() => filterTocHeadings(dataSource), [dataSource]);
   const [isOpen, setIsOpen] = useState(false);
   const triggerRef = useRef<HTMLButtonElement>(null);
@@ -133,7 +134,7 @@ function MobileToc({ dataSource = [], label }: MobileTocProps) {
               </h2>
               <button
                 type="button"
-                aria-label={`Close ${label}`}
+                aria-label={closeLabel}
                 className="text-slate10 hover:text-slate12 focus-visible:ring-indigo8 cursor-pointer rounded-full px-2 py-1 text-xl focus-visible:ring-2 focus-visible:outline-none"
                 onClick={closeDialog}
               >

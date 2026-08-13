@@ -56,3 +56,24 @@ export function getHeadingScrollTop(
   const safeChromeOffset = Number.isFinite(chromeOffset) ? chromeOffset : 0;
   return Math.max(0, safeOffsetTop - safeChromeOffset);
 }
+
+export function buildChatGPTReadingUrl(
+  site: string,
+  slug: string,
+  prompt: string,
+): string {
+  const baseUrl = new URL(site);
+  const normalizedBasePath = baseUrl.pathname.replace(/\/$/, '');
+  const encodedSlug = slug
+    .split('/')
+    .filter(Boolean)
+    .map((segment) => encodeURIComponent(segment))
+    .join('/');
+  baseUrl.pathname = `${normalizedBasePath}/blog/${encodedSlug}`;
+  baseUrl.search = '';
+  baseUrl.hash = '';
+
+  const chatGPTUrl = new URL('https://chatgpt.com/');
+  chatGPTUrl.searchParams.set('q', `${prompt} ${baseUrl.toString()}`);
+  return chatGPTUrl.toString();
+}

@@ -13,6 +13,7 @@ import RelatedPosts from '@/components/related-posts/index.astro';
 import slateConfig from '~@/slate.config';
 import { getFullTitle } from '@/helpers/utils';
 import { getRelatedPosts } from '@/helpers/related-posts';
+import { buildChatGPTReadingUrl } from '@/helpers/reading-navigation';
 import 'remark-block-containers/css';
 import '@/assets/style/blog.css';
 
@@ -57,6 +58,13 @@ const pubDate = dayjs(post.data.pubDate);
 const formattedPubDate = pubDate.isSame(dayjs(), 'year')
   ? pubDate.format('MMM DD')
   : pubDate.format('MMM DD, YYYY');
+const chatGPTReadingUrl = slateConfig.readWithChatGPT
+  ? buildChatGPTReadingUrl(
+      slateConfig.site,
+      post.slug,
+      i18next.t('blog.readWithChatGPTPrompt'),
+    )
+  : '';
 ---
 
 <PageLayout title={post.data.title} description={post.data.description}>
@@ -84,7 +92,7 @@ const formattedPubDate = pubDate.isSame(dayjs(), 'year')
   <div class="blog-content">
     <div class="mb-16">
       <h1>{post.data.title}</h1>
-      <div class="text-slate10 flex items-center gap-2">
+      <div class="text-slate10 flex flex-wrap items-center gap-2">
         <span>{formattedPubDate}</span>
         {!!slateConfig.readTime && <span>·</span>}
         {
@@ -94,6 +102,22 @@ const formattedPubDate = pubDate.isSame(dayjs(), 'year')
                 minutes: remarkPluginFrontmatter.minutesRead,
               })}
             </div>
+          )
+        }
+        {
+          slateConfig.readWithChatGPT && (
+            <>
+              <span>·</span>
+              <a
+                href={chatGPTReadingUrl}
+                target="_blank"
+                rel="noopener noreferrer"
+                aria-label={i18next.t('blog.readWithChatGPT')}
+                class="read-with-chatgpt hover:text-slate12 focus-visible:ring-indigo8 rounded-sm transition-colors focus-visible:ring-2 focus-visible:outline-none"
+              >
+                {i18next.t('blog.readWithChatGPT')}
+              </a>
+            </>
           )
         }
       </div>
@@ -127,6 +151,7 @@ const formattedPubDate = pubDate.isSame(dayjs(), 'year')
   <MobileToc
     dataSource={headings}
     label={i18next.t('blog.tableOfContents')}
+    closeLabel={i18next.t('blog.closeTableOfContents')}
     client:idle
   />
   <!-- E 目录 -->
