@@ -64,6 +64,10 @@ assert.match(matrixSource, /src\/content\/now\.md/);
 assert.match(matrixSource, /src\/content\/about\.md/);
 assert.match(matrixSource, /finally[\s\S]*rm\(/);
 assert.match(matrixSource, /realpath\(/);
+assert.match(matrixSource, /lstat\(/);
+assert.match(matrixSource, /isSymbolicLink\(\)/);
+assert.match(matrixSource, /withValidatedTempParent/);
+assert.match(matrixSource, /isMain/);
 assert.doesNotMatch(
   matrixSource,
   /process\.cwd\(\)[\s\S]*recursive:\s*true/,

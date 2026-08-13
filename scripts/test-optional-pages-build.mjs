@@ -4,6 +4,7 @@ import { realpathSync } from 'node:fs';
 import {
   access,
   cp,
+  lstat,
   mkdtemp,
   readFile,
   realpath,
@@ -17,17 +18,6 @@ import { fileURLToPath } from 'node:url';
 const repoRoot = dirname(dirname(fileURLToPath(import.meta.url)));
 const tempPrefix = 'slate-v18-optional-pages-';
 const resolvedSystemTemp = realpathSync(tmpdir());
-const repoGitDir = await realpath(
-  execFileSync('git', ['rev-parse', '--absolute-git-dir'], {
-    cwd: repoRoot,
-    encoding: 'utf8',
-  }).trim(),
-);
-const tempParent = await mkdtemp(join(tmpdir(), tempPrefix));
-const resolvedTempParent = await realpath(tempParent);
-
-assert.equal(dirname(resolvedTempParent), resolvedSystemTemp);
-assert.ok(basename(resolvedTempParent).startsWith(tempPrefix));
 
 const states = [
   { name: 'both', now: true, about: true },
@@ -35,12 +25,6 @@ const states = [
   { name: 'about-only', now: false, about: true },
   { name: 'neither', now: false, about: false },
 ];
-
-const excludedRoots = new Set(
-  ['.git', 'node_modules', 'dist', '.astro', 'docs', '.superpowers'].map(
-    (name) => join(repoRoot, name),
-  ),
-);
 
 const exists = async (path) => {
   try {
@@ -51,7 +35,7 @@ const exists = async (path) => {
   }
 };
 
-const build = (copyRoot) =>
+const build = (copyRoot, repoGitDir) =>
   new Promise((resolve, reject) => {
     const child = spawn('pnpm', ['build'], {
       cwd: copyRoot,
@@ -74,96 +58,164 @@ const build = (copyRoot) =>
     child.on('close', (code) => resolve({ code, stdout, stderr }));
   });
 
-try {
-  for (const state of states) {
-    const copyRoot = join(resolvedTempParent, state.name);
+const validateTempParent = async (tempParent) => {
+  const resolvedTempParent = await realpath(tempParent);
+  assert.equal(dirname(resolvedTempParent), resolvedSystemTemp);
+  assert.ok(basename(resolvedTempParent).startsWith(tempPrefix));
+  return resolvedTempParent;
+};
 
-    assert.equal(dirname(copyRoot), resolvedTempParent);
-    await cp(repoRoot, copyRoot, {
-      recursive: true,
-      filter: (source) => !excludedRoots.has(source),
-    });
+export const withValidatedTempParent = async (
+  runner,
+  validate = validateTempParent,
+) => {
+  const tempParent = await mkdtemp(join(tmpdir(), tempPrefix));
+  try {
+    const resolvedTempParent = await validate(tempParent);
+    return await runner(resolvedTempParent);
+  } finally {
+    const cleanupTarget = await realpath(tempParent).catch(() => undefined);
+    if (
+      cleanupTarget &&
+      dirname(cleanupTarget) === realpathSync(tmpdir()) &&
+      basename(cleanupTarget).startsWith('slate-v18-optional-pages-')
+    ) {
+      await rm(cleanupTarget, { recursive: true, force: true });
+    }
+  }
+};
 
-    const resolvedCopyRoot = await realpath(copyRoot);
-    assert.equal(dirname(resolvedCopyRoot), resolvedTempParent);
-    assert.equal(basename(resolvedCopyRoot), state.name);
+export const removeOptionalPage = async (copyRoot, page) => {
+  assert.ok(page === 'now' || page === 'about');
 
-    await symlink(
-      join(repoRoot, 'node_modules'),
-      join(copyRoot, 'node_modules'),
-    );
+  const resolvedCopyRoot = await realpath(copyRoot);
+  const srcPath = join(copyRoot, 'src');
+  const contentDirectory = join(srcPath, 'content');
+  const allowedContentPaths = {
+    now: join(copyRoot, 'src/content/now.md'),
+    about: join(copyRoot, 'src/content/about.md'),
+  };
+  const contentPath = allowedContentPaths[page];
+  const expectedResolvedContent = join(resolvedCopyRoot, 'src/content');
 
-    for (const [page, present] of [
-      ['now', state.now],
-      ['about', state.about],
-    ]) {
-      if (!present) {
-        const contentPath = join(copyRoot, `src/content/${page}.md`);
-        assert.equal(dirname(contentPath), join(copyRoot, 'src/content'));
-        assert.ok(
-          [
-            join(copyRoot, 'src/content/now.md'),
-            join(copyRoot, 'src/content/about.md'),
-          ].includes(contentPath),
-        );
-        await rm(contentPath, { force: true });
+  const [srcStats, contentStats, targetStats] = await Promise.all([
+    lstat(srcPath),
+    lstat(contentDirectory),
+    lstat(contentPath),
+  ]);
+  assert.ok(
+    !srcStats.isSymbolicLink(),
+    'src ancestor must not be a symbolic link',
+  );
+  assert.ok(
+    !contentStats.isSymbolicLink(),
+    'content ancestor must not be a symbolic link',
+  );
+  assert.ok(
+    !targetStats.isSymbolicLink(),
+    'target must not be a symbolic link',
+  );
+
+  const resolvedContent = await realpath(contentDirectory);
+  const resolvedTarget = await realpath(contentPath);
+  assert.equal(resolvedContent, expectedResolvedContent);
+  assert.equal(dirname(resolvedTarget), resolvedContent);
+  assert.equal(resolvedTarget, join(resolvedContent, `${page}.md`));
+
+  await rm(resolvedTarget, { force: true });
+};
+
+export const runMatrix = async () => {
+  const repoGitDir = await realpath(
+    execFileSync('git', ['rev-parse', '--absolute-git-dir'], {
+      cwd: repoRoot,
+      encoding: 'utf8',
+    }).trim(),
+  );
+  const excludedRoots = new Set(
+    ['.git', 'node_modules', 'dist', '.astro', 'docs', '.superpowers'].map(
+      (name) => join(repoRoot, name),
+    ),
+  );
+
+  await withValidatedTempParent(async (resolvedTempParent) => {
+    for (const state of states) {
+      const copyRoot = join(resolvedTempParent, state.name);
+
+      assert.equal(dirname(copyRoot), resolvedTempParent);
+      await cp(repoRoot, copyRoot, {
+        recursive: true,
+        filter: (source) => !excludedRoots.has(source),
+      });
+
+      const resolvedCopyRoot = await realpath(copyRoot);
+      assert.equal(dirname(resolvedCopyRoot), resolvedTempParent);
+      assert.equal(basename(resolvedCopyRoot), state.name);
+
+      await symlink(
+        join(repoRoot, 'node_modules'),
+        join(copyRoot, 'node_modules'),
+      );
+
+      for (const [page, present] of [
+        ['now', state.now],
+        ['about', state.about],
+      ]) {
+        if (!present) await removeOptionalPage(copyRoot, page);
       }
+
+      const result = await build(copyRoot, repoGitDir);
+      const buildLog = `${result.stdout}\n${result.stderr}`;
+
+      assert.equal(result.code, 0, `${state.name} build failed:\n${buildLog}`);
+      assert.doesNotMatch(buildLog, /matched no files|No matches found/i);
+
+      const distRoot = join(copyRoot, 'dist');
+      const homepage = await readFile(join(distRoot, 'index.html'), 'utf8');
+      const sitemap = await readFile(join(distRoot, 'sitemap-0.xml'), 'utf8');
+
+      assert.equal(
+        await exists(join(distRoot, 'now/index.html')),
+        state.now,
+        `${state.name}: /now output mismatch`,
+      );
+      assert.equal(
+        await exists(join(distRoot, 'about/index.html')),
+        state.about,
+        `${state.name}: /about output mismatch`,
+      );
+      assert.equal(
+        homepage.includes('href="/now"'),
+        state.now,
+        `${state.name}: Now header link mismatch`,
+      );
+      assert.equal(
+        homepage.includes('href="/about"'),
+        state.about,
+        `${state.name}: About header link mismatch`,
+      );
+      assert.equal(
+        sitemap.includes('/now/'),
+        state.now,
+        `${state.name}: Now sitemap entry mismatch`,
+      );
+      assert.equal(
+        sitemap.includes('/about/'),
+        state.about,
+        `${state.name}: About sitemap entry mismatch`,
+      );
+
+      if (state.name === 'neither') {
+        assert.doesNotMatch(homepage, /aria-label="Primary"/);
+      }
+
+      console.log(`${state.name}: passed`);
     }
+  });
+};
 
-    const result = await build(copyRoot);
-    const buildLog = `${result.stdout}\n${result.stderr}`;
+const isMain =
+  process.argv[1] &&
+  realpathSync(process.argv[1]) === fileURLToPath(import.meta.url);
 
-    assert.equal(result.code, 0, `${state.name} build failed:\n${buildLog}`);
-    assert.doesNotMatch(buildLog, /matched no files|No matches found/i);
-
-    const distRoot = join(copyRoot, 'dist');
-    const homepage = await readFile(join(distRoot, 'index.html'), 'utf8');
-    const sitemap = await readFile(join(distRoot, 'sitemap-0.xml'), 'utf8');
-
-    assert.equal(
-      await exists(join(distRoot, 'now/index.html')),
-      state.now,
-      `${state.name}: /now output mismatch`,
-    );
-    assert.equal(
-      await exists(join(distRoot, 'about/index.html')),
-      state.about,
-      `${state.name}: /about output mismatch`,
-    );
-    assert.equal(
-      homepage.includes('href="/now"'),
-      state.now,
-      `${state.name}: Now header link mismatch`,
-    );
-    assert.equal(
-      homepage.includes('href="/about"'),
-      state.about,
-      `${state.name}: About header link mismatch`,
-    );
-    assert.equal(
-      sitemap.includes('/now/'),
-      state.now,
-      `${state.name}: Now sitemap entry mismatch`,
-    );
-    assert.equal(
-      sitemap.includes('/about/'),
-      state.about,
-      `${state.name}: About sitemap entry mismatch`,
-    );
-
-    if (state.name === 'neither') {
-      assert.doesNotMatch(homepage, /aria-label="Primary"/);
-    }
-
-    console.log(`${state.name}: passed`);
-  }
-} finally {
-  const cleanupTarget = await realpath(tempParent).catch(() => undefined);
-  if (
-    cleanupTarget &&
-    dirname(cleanupTarget) === realpathSync(tmpdir()) &&
-    basename(cleanupTarget).startsWith('slate-v18-optional-pages-')
-  ) {
-    await rm(cleanupTarget, { recursive: true, force: true });
-  }
-}
+if (isMain) await runMatrix();

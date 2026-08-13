@@ -30,6 +30,7 @@
     "test:typesetting": "node scripts/test-typesetting.mjs",
     "test:now-page": "node scripts/test-now-page.mjs",
     "test:about-page": "node scripts/test-about-page.mjs",
+    "test:optional-pages-build-safety": "node scripts/test-optional-pages-build-safety.mjs",
     "test:optional-pages-build": "node scripts/test-optional-pages-build.mjs",
     "format": "prettier --write \"src/**/*.{js,ts,jsx,tsx,astro}\"",
     "sync-latest": "./scripts/sync-latest-blog.sh"
