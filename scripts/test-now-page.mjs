@@ -127,4 +127,20 @@ assert.doesNotMatch(
   'the default Now page must not require article frontmatter',
 );
 
+const englishReadme = read('README.md');
+const chineseReadme = read('README-zh_CN.md');
+
+for (const [language, readme] of [
+  ['English', englishReadme],
+  ['Chinese', chineseReadme],
+]) {
+  assert.match(readme, /src\/content\/now\.md/, `${language} README must name the switch file`);
+  assert.match(readme, /\/now/, `${language} README must document the route`);
+  assert.match(readme, /1\.7\.0/, `${language} README must include the release entry`);
+}
+assert.match(englishReadme, /delete[^.]*now\.md[^.]*remove[^.]*navigation[^.]*route/is);
+assert.match(chineseReadme, /删除[^。]*now\.md[^。]*(?:导航|入口)[^。]*(?:路由|页面)/is);
+assert.match(englishReadme, /delete[^.]*now\.md[^.]*sitemap/is);
+assert.match(chineseReadme, /删除[^。]*now\.md[^。]*sitemap/is);
+
 console.log('optional now page tests passed');

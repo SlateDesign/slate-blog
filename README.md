@@ -56,13 +56,19 @@ pnpm build
 - src/
   ├── assets/         # Asset files
   ├── components/     # Components
-  ├── content/        # Content collections
+  ├── content/        # Content collections and optional pages
+  │   ├── now.md      # Optional /now page; delete to disable
+  │   └── post/       # Blog articles
   ├── helpers/        # Business logic
   ├── pages/          # Pages
   └── typings/        # Common types
 ```
 
 > Articles are stored in the `src/content/post` directory, supporting markdown and mdx formats. The filename is the path name. For example, `src/content/post/my-first-post.md` => `https://your-blog.com/blog/my-first-post`.
+
+### Optional Now Page
+
+`src/content/now.md` enables the `/now` page and its Header navigation entry. The included example means this is enabled by default. It uses the same Markdown pipeline and typography as blog articles, including code blocks, tables, math, containers, and image captions. Delete `src/content/now.md` to remove the navigation entry, route, and sitemap address.
 
 ## Configuration
 
@@ -200,6 +206,11 @@ This is an information prompt
 ```
 
 ## Updates
+
+### Version 1.7.0
+
+- Added an optional, complete-Markdown Now page driven by `src/content/now.md`
+- Added conditional Header navigation and route generation with file-based opt-out
 
 ### Version 1.6.0
 
