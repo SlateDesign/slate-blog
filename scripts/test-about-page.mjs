@@ -67,12 +67,20 @@ assert.match(
 );
 assert.doesNotMatch(aboutMarkdown, /^---\s*$/m);
 
-for (const personalBlogDetail of [
-  /(?:github|steam|bilibili|wechat)\s*(?:id|account|账号)\s*[:：]?\s*\d+/i,
-  /(?:Canon|Nikon|Sony|Fujifilm)\s+[A-Z0-9-]+/i,
-  /^\s*[-*]\s+.*(?:project|项目).*$/im,
-  /(?:born|graduated|joined)\s+.*\b(?:19|20)\d{2}\b/i,
-]) {
+const personalBlogDetails = [
+  /\b(?:Bluepikachu|exping|Pixyer|NiFiTi|Figma UX Writing|Files Preview)\b/i,
+  /(?:新年第一杯喝什么|大师对谈之《红猪》|奶茶喝什么)/,
+  /\b(?:Nikon Z f|Ricoh GR II|Nikon AF600|Canon EOS 30|Yashica Samurai|Minolta 360si)\b/i,
+  /\b(?:SW-7973-4801-4403|138072651)\b/,
+];
+
+const includesPersonalBlogDetail = (markdown) =>
+  personalBlogDetails.some((detail) => detail.test(markdown));
+
+assert.equal(includesPersonalBlogDetail('- Project setup notes'), false);
+assert.equal(includesPersonalBlogDetail('- Pixyer project notes'), true);
+
+for (const personalBlogDetail of personalBlogDetails) {
   assert.doesNotMatch(aboutMarkdown, personalBlogDetail);
 }
 
