@@ -1,21 +1,39 @@
 ---
 import slateConfig from '~@/slate.config';
+import { findNowPage } from '@/helpers/optional-now-page';
 
 interface Props {
   avatar?: string;
 }
 
 const { avatar = slateConfig.avatar } = Astro.props;
+const hasNowPage = Boolean(
+  findNowPage(import.meta.glob('/src/content/*')),
+);
 ---
 
 <header>
-  <div class="mb-9 h-14 w-14 whitespace-nowrap text-[0px]">
-    <img
-      class="block h-full w-full rounded-full border-2 border-white bg-slate2 shadow-xs outline-1 outline-slate3"
-      src={avatar}
-      alt={slateConfig.title}
-      draggable="false"
-    />
-    <span>{slateConfig.title}</span>
+  <div class="mb-9 flex items-center justify-between">
+    <div class="h-14 w-14 whitespace-nowrap text-[0px]">
+      <img
+        class="block h-full w-full rounded-full border-2 border-white bg-slate2 shadow-xs outline-1 outline-slate3"
+        src={avatar}
+        alt={slateConfig.title}
+        draggable="false"
+      />
+      <span>{slateConfig.title}</span>
+    </div>
+    {
+      hasNowPage && (
+        <nav class="flex items-center gap-6" aria-label="Primary">
+          <a
+            href="/now"
+            class="text-slate11 hover:text-slate12 text-base font-medium transition-colors"
+          >
+            Now
+          </a>
+        </nav>
+      )
+    }
   </div>
 </header>
