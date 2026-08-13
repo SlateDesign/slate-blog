@@ -56,6 +56,26 @@ assert.equal(
 const read = (path) =>
   readFileSync(new URL(`../${path}`, import.meta.url), 'utf8');
 
+const aboutMarkdown = read('src/content/about.md');
+
+assert.match(aboutMarkdown, /^## Hello$/m);
+assert.match(aboutMarkdown, /^## About this site$/m);
+assert.match(aboutMarkdown, /person behind this blog/i);
+assert.match(
+  aboutMarkdown,
+  /delete `src\/content\/about\.md` to\s+disable the page/i,
+);
+assert.doesNotMatch(aboutMarkdown, /^---\s*$/m);
+
+for (const personalBlogDetail of [
+  /(?:github|steam|bilibili|wechat)\s*(?:id|account|账号)\s*[:：]?\s*\d+/i,
+  /(?:Canon|Nikon|Sony|Fujifilm)\s+[A-Z0-9-]+/i,
+  /^\s*[-*]\s+.*(?:project|项目).*$/im,
+  /(?:born|graduated|joined)\s+.*\b(?:19|20)\d{2}\b/i,
+]) {
+  assert.doesNotMatch(aboutMarkdown, personalBlogDetail);
+}
+
 const headerSource = read('src/components/layouts/Header.astro');
 
 assert.match(headerSource, /OPTIONAL_PAGE_SOURCES\.about/);
