@@ -1,0 +1,49 @@
+---
+import type { MarkdownInstance } from 'astro';
+import PageLayout from '@/components/layouts/PageLayout.astro';
+import { findNowPage } from '@/helpers/optional-now-page';
+import 'remark-block-containers/css';
+import '@/assets/style/blog.css';
+
+type NowModule = MarkdownInstance<Record<string, unknown>>;
+
+export async function getStaticPaths() {
+  const loaders = import.meta.glob<NowModule>('/src/content/*');
+  const loadNowPage = findNowPage(loaders);
+  if (!loadNowPage) return [];
+
+  const nowPage = await loadNowPage();
+
+  return [
+    {
+      params: { path: undefined },
+      props: { Content: nowPage.Content },
+    },
+  ];
+}
+
+interface Props {
+  Content: NowModule['Content'];
+}
+
+const { Content } = Astro.props;
+---
+
+<PageLayout title="Now">
+  <div class="blog-content">
+    <Content />
+  </div>
+</PageLayout>
+
+<script>
+  import { pangu } from 'pangu/browser';
+
+  const content = document.querySelector('.blog-content');
+  if (content instanceof HTMLElement) {
+    try {
+      pangu.spacingNode(content);
+    } catch (error) {
+      console.error('Failed to initialize pangu.', error);
+    }
+  }
+</script>

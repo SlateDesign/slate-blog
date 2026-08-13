@@ -56,12 +56,18 @@ pnpm build
 - src/
   ├── assets/         # 图片文件
   ├── components/     # 组件
-  ├── content/        # 内容
+  ├── content/        # 内容集合与可选页面
+  │   ├── now.md      # 可选 /now 页面，删除即可关闭
+  │   └── post/       # 博客文章
   ├── helpers/        # 业务逻辑
   ├── pages/          # 页面
   └── typings/        # 通用类型
 
 ```
+
+### 可选 Now 页面
+
+`src/content/now.md` 会启用 `/now` 页面及 Header 中的 Now 入口。仓库随附示例，因此默认启用。该页面与博客文章共用完整 Markdown 渲染链路和正文样式，包括代码块、表格、数学公式、容器及图片说明。删除 `src/content/now.md` 会同时移除导航入口、页面路由和 sitemap 地址。
 
 ## 配置
 
@@ -199,6 +205,11 @@ pubDate: 2025-01-06
 ```
 
 ## 更新日志
+
+### 版本 1.7.0
+
+- 新增由 `src/content/now.md` 驱动、支持完整 Markdown 的可选 Now 页面
+- 新增随文件存在性启用或关闭的 Header 入口与页面路由
 
 ### 版本 1.6.0
 
