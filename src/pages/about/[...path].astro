@@ -1,0 +1,55 @@
+---
+import type { MarkdownInstance } from 'astro';
+import PageLayout from '@/components/layouts/PageLayout.astro';
+import {
+  findOptionalPage,
+  OPTIONAL_PAGE_SOURCES,
+} from '@/helpers/optional-content-page';
+import 'remark-block-containers/css';
+import '@/assets/style/blog.css';
+
+type AboutModule = MarkdownInstance<Record<string, unknown>>;
+
+export async function getStaticPaths() {
+  const loaders = import.meta.glob<AboutModule>('/src/content/*');
+  const loadAboutPage = findOptionalPage(
+    loaders,
+    OPTIONAL_PAGE_SOURCES.about,
+  );
+  if (!loadAboutPage) return [];
+
+  const aboutPage = await loadAboutPage();
+
+  return [
+    {
+      params: { path: undefined },
+      props: { Content: aboutPage.Content },
+    },
+  ];
+}
+
+interface Props {
+  Content: AboutModule['Content'];
+}
+
+const { Content } = Astro.props;
+---
+
+<PageLayout title="About">
+  <div class="blog-content">
+    <Content />
+  </div>
+</PageLayout>
+
+<script>
+  import { pangu } from 'pangu/browser';
+
+  const content = document.querySelector('.blog-content');
+  if (content instanceof HTMLElement) {
+    try {
+      pangu.spacingNode(content);
+    } catch (error) {
+      console.error('Failed to initialize pangu.', error);
+    }
+  }
+</script>

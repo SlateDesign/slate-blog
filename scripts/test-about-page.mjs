@@ -88,3 +88,20 @@ for (const href of ['/now', '/about']) {
 }
 
 assert.match(headerSource, /<nav class="flex items-center gap-6"/);
+
+const routeSource = read('src/pages/about/[...path].astro');
+
+assert.match(routeSource, /import type \{ MarkdownInstance \} from 'astro'/);
+assert.match(
+  routeSource,
+  /import\.meta\.glob<AboutModule>\('\/src\/content\/\*'\)/,
+);
+assert.doesNotMatch(routeSource, /eager\s*:\s*true/);
+assert.match(routeSource, /OPTIONAL_PAGE_SOURCES\.about/);
+assert.match(routeSource, /if \(!loadAboutPage\) return \[\]/);
+assert.match(routeSource, /params:\s*\{\s*path:\s*undefined\s*\}/);
+assert.match(routeSource, /props:\s*\{\s*Content:\s*aboutPage\.Content\s*\}/);
+assert.match(routeSource, /<PageLayout title="About">/);
+assert.match(routeSource, /<div class="blog-content">\s*<Content \/>/);
+assert.match(routeSource, /pangu\.spacingNode\(content\)/);
+assert.doesNotMatch(routeSource, /readFileSync|marked|set:html/);
