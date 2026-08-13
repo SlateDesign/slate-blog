@@ -56,6 +56,19 @@ assert.equal(
 const read = (path) =>
   readFileSync(new URL(`../${path}`, import.meta.url), 'utf8');
 
+const matrixSource = read('scripts/test-optional-pages-build.mjs');
+
+assert.match(matrixSource, /mkdtemp\(/);
+assert.match(matrixSource, /slate-v18-optional-pages-/);
+assert.match(matrixSource, /src\/content\/now\.md/);
+assert.match(matrixSource, /src\/content\/about\.md/);
+assert.match(matrixSource, /finally[\s\S]*rm\(/);
+assert.match(matrixSource, /realpath\(/);
+assert.doesNotMatch(
+  matrixSource,
+  /process\.cwd\(\)[\s\S]*recursive:\s*true/,
+);
+
 const aboutMarkdown = read('src/content/about.md');
 
 assert.match(aboutMarkdown, /^## Hello$/m);
