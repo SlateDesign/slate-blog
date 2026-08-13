@@ -29,6 +29,7 @@
     "test:reading-navigation": "node scripts/test-reading-navigation.mjs",
     "test:typesetting": "node scripts/test-typesetting.mjs",
     "test:now-page": "node scripts/test-now-page.mjs",
+    "test:about-page": "node scripts/test-about-page.mjs",
     "format": "prettier --write \"src/**/*.{js,ts,jsx,tsx,astro}\"",
     "sync-latest": "./scripts/sync-latest-blog.sh"
   },

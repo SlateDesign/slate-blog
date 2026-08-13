@@ -1,7 +1,10 @@
 ---
 import type { MarkdownInstance } from 'astro';
 import PageLayout from '@/components/layouts/PageLayout.astro';
-import { findNowPage } from '@/helpers/optional-now-page';
+import {
+  findOptionalPage,
+  OPTIONAL_PAGE_SOURCES,
+} from '@/helpers/optional-content-page';
 import 'remark-block-containers/css';
 import '@/assets/style/blog.css';
 
@@ -9,7 +12,10 @@ type NowModule = MarkdownInstance<Record<string, unknown>>;
 
 export async function getStaticPaths() {
   const loaders = import.meta.glob<NowModule>('/src/content/*');
-  const loadNowPage = findNowPage(loaders);
+  const loadNowPage = findOptionalPage(
+    loaders,
+    OPTIONAL_PAGE_SOURCES.now,
+  );
   if (!loadNowPage) return [];
 
   const nowPage = await loadNowPage();

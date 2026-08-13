@@ -1,14 +1,18 @@
 ---
 import slateConfig from '~@/slate.config';
-import { findNowPage } from '@/helpers/optional-now-page';
+import {
+  findOptionalPage,
+  OPTIONAL_PAGE_SOURCES,
+} from '@/helpers/optional-content-page';
 
 interface Props {
   avatar?: string;
 }
 
 const { avatar = slateConfig.avatar } = Astro.props;
+const contentModules = import.meta.glob('/src/content/*');
 const hasNowPage = Boolean(
-  findNowPage(import.meta.glob('/src/content/*')),
+  findOptionalPage(contentModules, OPTIONAL_PAGE_SOURCES.now),
 );
 ---
 

@@ -16,21 +16,21 @@ const importTypeScript = async (path) => {
   );
 };
 
-const { NOW_PAGE_SOURCE, findNowPage } = await importTypeScript(
-  'src/helpers/optional-now-page.ts',
+const { OPTIONAL_PAGE_SOURCES, findOptionalPage } = await importTypeScript(
+  'src/helpers/optional-content-page.ts',
 );
 
-assert.equal(NOW_PAGE_SOURCE, '/src/content/now.md');
-assert.equal(findNowPage({}), undefined);
+assert.equal(OPTIONAL_PAGE_SOURCES.now, '/src/content/now.md');
+assert.equal(findOptionalPage({}, OPTIONAL_PAGE_SOURCES.now), undefined);
 
 const expected = { Content: 'compiled-now-page' };
 assert.equal(
-  findNowPage({
+  findOptionalPage({
     '/src/content/config.ts': {},
     '/src/content/now.mdx': { Content: 'wrong-extension' },
     '/src/content/nested/now.md': { Content: 'wrong-directory' },
     '/src/content/now.md': expected,
-  }),
+  }, OPTIONAL_PAGE_SOURCES.now),
   expected,
 );
 
@@ -50,7 +50,7 @@ assert.doesNotMatch(
 );
 assert.match(
   header,
-  /findNowPage\([\s\S]*?\)[\s\S]*?hasNowPage[\s\S]*?<nav/,
+  /findOptionalPage\([\s\S]*?OPTIONAL_PAGE_SOURCES\.now[\s\S]*?\)[\s\S]*?hasNowPage[\s\S]*?<nav/,
   'Header must render navigation only when now.md exists',
 );
 assert.match(
