@@ -65,8 +65,14 @@ assert.match(
   /const hasOptionalPages = hasNowPage \|\| hasAboutPage/,
 );
 assert.match(headerSource, /hasOptionalPages\s*&&\s*\(\s*<nav/);
-assert.match(headerSource, /hasNowPage\s*&&[\s\S]*href="\/now"/);
-assert.match(headerSource, /hasAboutPage\s*&&[\s\S]*href="\/about"/);
+assert.match(
+  headerSource,
+  /\{hasNowPage\s*&&\s*\(\s*<a\s+href="\/now"[\s\S]*?<\/a>\s*\)\}/,
+);
+assert.match(
+  headerSource,
+  /\{hasAboutPage\s*&&\s*\(\s*<a\s+href="\/about"[\s\S]*?<\/a>\s*\)\}/,
+);
 
 const nowIndex = headerSource.indexOf('href="/now"');
 const aboutIndex = headerSource.indexOf('href="/about"');

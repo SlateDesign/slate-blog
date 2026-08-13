@@ -50,8 +50,8 @@ assert.doesNotMatch(
 );
 assert.match(
   header,
-  /findOptionalPage\([\s\S]*?OPTIONAL_PAGE_SOURCES\.now[\s\S]*?\)[\s\S]*?hasNowPage[\s\S]*?<nav/,
-  'Header must render navigation only when now.md exists',
+  /const hasNowPage = Boolean\(\s*findOptionalPage\(\s*contentModules,\s*OPTIONAL_PAGE_SOURCES\.now,?\s*\),\s*\);/,
+  'Header must compute the Now state from its exact optional content source',
 );
 assert.match(
   header,
@@ -60,7 +60,7 @@ assert.match(
 );
 assert.match(
   header,
-  /hasNowPage\s*&&\s*\([\s\S]*?href=["']\/now["']/,
+  /\{hasNowPage\s*&&\s*\(\s*<a\s+href=["']\/now["'][\s\S]*?<\/a>\s*\)\}/,
   'Header must omit the Now link when now.md is absent',
 );
 assert.match(
