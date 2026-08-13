@@ -51,6 +51,7 @@
     "i18next": "^24.2.2",
     "mdast-util-to-string": "^4.0.0",
     "pangu": "7.2.1",
+    "progressive-blur": "^1.0.0",
     "react": "^18.3.1",
     "react-dom": "^18.3.1",
     "reading-time": "^1.5.0",

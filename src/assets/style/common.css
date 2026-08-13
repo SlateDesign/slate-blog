@@ -142,30 +142,12 @@ body {
   @apply text-slate12 text-sm;
 }
 
-.affix-title-progressive-blur {
-  isolation: isolate;
+:root {
+  --slate-1-rgb: 252, 252, 253;
 }
 
-.affix-title-progressive-blur::before {
-  content: '';
-  position: absolute;
-  z-index: -1;
-  inset: 0 0 -2rem;
-  pointer-events: none;
-  background: linear-gradient(
-    to bottom,
-    color-mix(in srgb, var(--slate-1) 82%, transparent),
-    transparent
-  );
-  -webkit-backdrop-filter: blur(18px);
-  backdrop-filter: blur(18px);
-  -webkit-mask-image: linear-gradient(
-    to bottom,
-    black 0%,
-    black 54%,
-    transparent 100%
-  );
-  mask-image: linear-gradient(to bottom, black 0%, black 54%, transparent 100%);
+.dark {
+  --slate-1-rgb: 17, 17, 19;
 }
 
 .affix-title-fallback {
@@ -174,13 +156,72 @@ body {
   backdrop-filter: blur(12px);
 }
 
+.mobile-toc-icon-bar {
+  stroke: currentColor;
+  stroke-width: 1.75;
+  stroke-linecap: round;
+  transform-box: fill-box;
+  transform-origin: center;
+  transition:
+    transform 220ms cubic-bezier(0.4, 0, 0.2, 1),
+    opacity 160ms ease;
+}
+
+.mobile-toc-icon.is-open .mobile-toc-icon-bar.top {
+  transform: translateY(4px) rotate(45deg);
+}
+
+.mobile-toc-icon.is-open .mobile-toc-icon-bar.middle {
+  transform: scaleX(0);
+  opacity: 0;
+}
+
+.mobile-toc-icon.is-open .mobile-toc-icon-bar.bottom {
+  transform: translateY(-4px) rotate(-45deg);
+}
+
+.mobile-toc-panel {
+  transform-origin: top right;
+  transform-box: border-box;
+  transition:
+    transform 240ms cubic-bezier(0.4, 0, 0.2, 1),
+    opacity 120ms ease;
+}
+
+.mobile-toc-panel--closed {
+  transform: scaleY(0.08) scaleX(0.4);
+  opacity: 0;
+}
+
+.mobile-toc-panel--open {
+  transition-delay: 60ms;
+  transform: scaleY(1) scaleX(1);
+  opacity: 1;
+}
+
+.mobile-toc-item {
+  transition:
+    opacity 180ms ease,
+    transform 180ms ease;
+}
+
 @media (prefers-reduced-motion: reduce) {
   .affix-title-progressive-blur,
   .affix-title-fallback {
     transition-duration: 0ms;
   }
 
-  .reading-progress-ring {
+  .reading-progress-motion {
     transition: none;
+  }
+
+  .mobile-toc-icon-bar,
+  .mobile-toc-panel,
+  .mobile-toc-item {
+    transition: none;
+  }
+
+  .mobile-toc-panel--open {
+    transition-delay: 0ms;
   }
 }

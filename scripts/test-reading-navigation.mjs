@@ -248,8 +248,13 @@ assert.match(
 
 assert.match(
   mobileTocComponent,
-  /<button[\s\S]*?aria-haspopup=["']dialog["'][\s\S]*?aria-expanded=/,
-  'mobile TOC must open from an accessible disclosure button',
+  /top-\[4\.5rem\][\s\S]*?size-7[\s\S]*?right:\s*'max\(1rem, calc\(\(100vw - 45rem\) \/ 2 \+ 1rem\)\)'/,
+  'mobile TOC trigger must match the personal-blog position and quiet icon size',
+);
+assert.match(
+  mobileTocComponent,
+  /mobile-toc-icon size-5[\s\S]*?mobile-toc-icon-bar top[\s\S]*?mobile-toc-icon-bar middle[\s\S]*?mobile-toc-icon-bar bottom/,
+  'mobile TOC trigger must use the personal-blog three-line morphing icon',
 );
 assert.match(
   mobileTocComponent,
@@ -263,8 +268,8 @@ assert.match(
 );
 assert.match(
   mobileTocComponent,
-  /event\.target\s*===\s*event\.currentTarget[\s\S]*?closeDialog/,
-  'clicking the overlay itself must dismiss the mobile TOC',
+  /bg-slate12\/25 absolute inset-0[\s\S]*?onClick=\{closeDialog\}/,
+  'the personal-blog overlay button must dismiss the mobile TOC',
 );
 assert.match(
   mobileTocComponent,
@@ -273,8 +278,13 @@ assert.match(
 );
 assert.match(
   mobileTocComponent,
-  /aria-controls=\{isOpen\s*\?\s*dialogId[\s\S]*?id=\{dialogId\}[\s\S]*?role=["']dialog["']/,
+  /aria-controls=\{dialogId\}[\s\S]*?id=\{dialogId\}[\s\S]*?role=["']dialog["']/,
   'the disclosure control must reference the dialog element it opens',
+);
+assert.match(
+  mobileTocComponent,
+  /role=["']dialog["'][\s\S]{0,200}?aria-hidden=\{!isOpen\}/,
+  'the closed mobile dialog must be removed from the accessibility tree',
 );
 assert.match(
   mobileTocComponent,
@@ -283,13 +293,13 @@ assert.match(
 );
 assert.match(
   mobileTocComponent,
-  /matchMedia\(['"]\(min-width:\s*1280px\)['"]\)[\s\S]*?closeDialog/,
+  /matchMedia\(['"]\(min-width:\s*1280px\)['"]\)[\s\S]*?setIsOpen\(false\)/,
   'crossing into the xl desktop breakpoint must close the mobile dialog',
 );
 assert.match(
   articlePage,
-  /<MobileToc[\s\S]*?dataSource=\{headings\}[\s\S]*?client:/,
-  'article pages must hydrate the mobile TOC with the same heading records',
+  /<MobileToc[\s\S]*?dataSource=\{headings\}[\s\S]*?client:load/,
+  'article pages must immediately hydrate the mobile TOC with the same heading records',
 );
 assert.match(english, /tableOfContents:/, 'English mobile TOC copy must exist');
 assert.match(chinese, /tableOfContents:/, 'Chinese mobile TOC copy must exist');
@@ -299,8 +309,33 @@ assert.match(
   'the mobile dialog close action must use localized accessible copy',
 );
 assert.match(
-  blogStyles,
-  /prefers-reduced-motion:\s*reduce[\s\S]*?mobile-toc/,
+  mobileTocComponent,
+  /dialogRef\.current\?\.focus\(\{ preventScroll:\s*true \}\)/,
+  'opening must focus the panel itself like the personal-blog interaction',
+);
+assert.match(
+  mobileTocComponent,
+  /top-16 bottom-2[\s\S]*?mobile-toc-panel--open[\s\S]*?mobile-toc-panel--closed pointer-events-none/,
+  'mobile TOC panel must use the personal-blog floating-card geometry and states',
+);
+assert.match(
+  mobileTocComponent,
+  /opacity:\s*isOpen \? 1 : 0[\s\S]*?translateY\(0\)[\s\S]*?translateY\(4px\)[\s\S]*?180 \+ index \* 10/,
+  'mobile TOC rows must use the personal-blog staggered fade and lift',
+);
+assert.match(
+  commonStyles,
+  /\.mobile-toc-icon-bar[\s\S]*?transform 220ms cubic-bezier\(0\.4, 0, 0\.2, 1\)[\s\S]*?\.mobile-toc-icon\.is-open \.mobile-toc-icon-bar\.top[\s\S]*?translateY\(4px\) rotate\(45deg\)/,
+  'mobile TOC icon must use the personal-blog morph timing',
+);
+assert.match(
+  commonStyles,
+  /\.mobile-toc-panel[\s\S]*?transform-origin:\s*top right[\s\S]*?transform 240ms cubic-bezier\(0\.4, 0, 0\.2, 1\)[\s\S]*?\.mobile-toc-panel--open[\s\S]*?transition-delay:\s*60ms/,
+  'mobile panel must expand from the trigger after the overlay appears',
+);
+assert.match(
+  commonStyles,
+  /prefers-reduced-motion:\s*reduce[\s\S]*?mobile-toc-icon-bar[\s\S]*?mobile-toc-panel[\s\S]*?mobile-toc-item/,
   'mobile TOC motion must be disabled when reduced motion is preferred',
 );
 
@@ -326,8 +361,18 @@ assert.match(
 );
 assert.match(
   circularProgressComponent,
-  /isComplete[\s\S]*?aria-hidden=["']true["'][\s\S]*?✓/,
-  'one hundred percent must render a visual completion state',
+  /isComplete[\s\S]*?width=\{size \* 0\.5\}[\s\S]*?viewBox="0 0 24 24"[\s\S]*?M20 6L9 17L4 12/,
+  'one hundred percent must render the personal-blog 14px SVG check',
+);
+assert.match(
+  circularProgressComponent,
+  /isComplete[\s\S]*?scale-100 rotate-0 opacity-100[\s\S]*?scale-75 rotate-45 opacity-0[\s\S]*?isComplete[\s\S]*?scale-75 rotate-45 opacity-0[\s\S]*?scale-100 rotate-0 opacity-100/,
+  'check and percentage must cross-fade with the personal-blog scale and rotation',
+);
+assert.match(
+  commonStyles,
+  /prefers-reduced-motion:\s*reduce[\s\S]*?reading-progress-motion[\s\S]*?transition:\s*none/,
+  'all completion-state layers must stop transitioning when reduced motion is preferred',
 );
 assert.match(
   affixTitleComponent,
@@ -336,8 +381,13 @@ assert.match(
 );
 assert.match(
   affixTitleComponent,
-  /progressiveBlur[\s\S]*?affix-title-progressive-blur[\s\S]*?affix-title-fallback/,
-  'floating title must switch between progressive and fallback backgrounds',
+  /progressiveBlur[\s\S]*?<LinearBlur[\s\S]*?strength=\{36\}[\s\S]*?steps=\{12\}[\s\S]*?falloffPercentage=\{82\}/,
+  'progressive floating title must use the personal-blog LinearBlur settings',
+);
+assert.match(
+  affixTitleComponent,
+  /!progressiveBlur && 'affix-title-fallback'/,
+  'disabled progressive blur must switch to the fallback background',
 );
 assert.match(
   articlePage,
@@ -345,9 +395,14 @@ assert.match(
   'article pages must pass normalized reading UI settings to the floating title',
 );
 assert.match(
-  commonStyles,
-  /\.affix-title-progressive-blur::before[\s\S]*?backdrop-filter:[\s\S]*?mask-image:/,
-  'progressive blur must fade a separate backdrop layer toward the article',
+  affixTitleComponent,
+  /h-40 overflow-hidden[\s\S]*?from-slate1\/46 via-slate1\/14[\s\S]*?to-transparent/,
+  'progressive blur must use the personal-blog depth and tint overlay',
+);
+assert.match(
+  affixTitleComponent,
+  /motion-reduce:transition-none/,
+  'floating-title entrance motion must stop when reduced motion is preferred',
 );
 assert.match(
   commonStyles,
@@ -356,7 +411,7 @@ assert.match(
 );
 assert.match(
   commonStyles,
-  /prefers-reduced-motion:\s*reduce[\s\S]*?\.reading-progress-ring[\s\S]*?transition:\s*none/,
+  /prefers-reduced-motion:\s*reduce[\s\S]*?\.reading-progress-motion[\s\S]*?transition:\s*none/,
   'circular progress transitions must stop when reduced motion is preferred',
 );
 assert.match(
