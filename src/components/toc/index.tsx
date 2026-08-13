@@ -52,6 +52,7 @@ function Toc(props: TocProps) {
 
     scheduleUpdate();
     window.addEventListener('resize', scheduleUpdate);
+    window.addEventListener('scroll', scheduleUpdate, { passive: true });
 
     let observer: IntersectionObserver | undefined;
     if (typeof IntersectionObserver !== 'undefined') {
@@ -63,8 +64,6 @@ function Toc(props: TocProps) {
         const element = document.getElementById(slug);
         if (element) observer?.observe(element);
       });
-    } else {
-      window.addEventListener('scroll', scheduleUpdate, { passive: true });
     }
 
     return () => {

@@ -206,6 +206,11 @@ assert.match(
   /addEventListener\(['"]scroll['"]/,
   'desktop TOC must retain a scroll fallback',
 );
+assert.doesNotMatch(
+  tocComponent,
+  /else\s*\{\s*window\.addEventListener\(['"]scroll['"]/,
+  'desktop TOC scroll fallback must remain active even when IntersectionObserver exists',
+);
 assert.match(
   tocComponent,
   /aria-current=\{[\s\S]*?'location'[\s\S]*?\}/,
