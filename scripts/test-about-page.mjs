@@ -20,6 +20,7 @@ const { OPTIONAL_PAGE_SOURCES, findOptionalPage } = await importTypeScript(
   'src/helpers/optional-content-page.ts',
 );
 
+assert.deepEqual(Object.keys(OPTIONAL_PAGE_SOURCES), ['now', 'about']);
 assert.equal(
   OPTIONAL_PAGE_SOURCES.now,
   '/src/content/now.md',
