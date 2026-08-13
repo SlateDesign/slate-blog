@@ -55,8 +55,13 @@ assert.match(
 );
 assert.match(
   header,
-  /hasNowPage\s*&&\s*\([\s\S]*?<nav/,
-  'Header must omit the complete nav element when the file is absent',
+  /hasOptionalPages\s*&&\s*\(\s*<nav/,
+  'Header must omit the complete nav element when both optional pages are absent',
+);
+assert.match(
+  header,
+  /hasNowPage\s*&&\s*\([\s\S]*?href=["']\/now["']/,
+  'Header must omit the Now link when now.md is absent',
 );
 assert.match(
   header,

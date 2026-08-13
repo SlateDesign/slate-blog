@@ -56,4 +56,29 @@ assert.equal(
 const read = (path) =>
   readFileSync(new URL(`../${path}`, import.meta.url), 'utf8');
 
-void read;
+const headerSource = read('src/components/layouts/Header.astro');
+
+assert.match(headerSource, /OPTIONAL_PAGE_SOURCES\.about/);
+assert.match(headerSource, /const hasAboutPage = Boolean\(/);
+assert.match(
+  headerSource,
+  /const hasOptionalPages = hasNowPage \|\| hasAboutPage/,
+);
+assert.match(headerSource, /hasOptionalPages\s*&&\s*\(\s*<nav/);
+assert.match(headerSource, /hasNowPage\s*&&[\s\S]*href="\/now"/);
+assert.match(headerSource, /hasAboutPage\s*&&[\s\S]*href="\/about"/);
+
+const nowIndex = headerSource.indexOf('href="/now"');
+const aboutIndex = headerSource.indexOf('href="/about"');
+assert.ok(nowIndex >= 0 && aboutIndex > nowIndex);
+
+for (const href of ['/now', '/about']) {
+  assert.match(
+    headerSource,
+    new RegExp(
+      `<a\\s+href="${href}"\\s+class="(?=[^"]*text-base)(?=[^"]*font-medium)(?=[^"]*text-slate11)(?=[^"]*hover:text-slate12)`,
+    ),
+  );
+}
+
+assert.match(headerSource, /<nav class="flex items-center gap-6"/);

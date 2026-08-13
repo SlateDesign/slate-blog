@@ -14,6 +14,10 @@ const contentModules = import.meta.glob('/src/content/*');
 const hasNowPage = Boolean(
   findOptionalPage(contentModules, OPTIONAL_PAGE_SOURCES.now),
 );
+const hasAboutPage = Boolean(
+  findOptionalPage(contentModules, OPTIONAL_PAGE_SOURCES.about),
+);
+const hasOptionalPages = hasNowPage || hasAboutPage;
 ---
 
 <header>
@@ -28,14 +32,24 @@ const hasNowPage = Boolean(
       <span>{slateConfig.title}</span>
     </div>
     {
-      hasNowPage && (
+      hasOptionalPages && (
         <nav class="flex items-center gap-6" aria-label="Primary">
-          <a
-            href="/now"
-            class="text-slate11 hover:text-slate12 text-base font-medium transition-colors"
-          >
-            Now
-          </a>
+          {hasNowPage && (
+            <a
+              href="/now"
+              class="text-slate11 hover:text-slate12 text-base font-medium transition-colors"
+            >
+              Now
+            </a>
+          )}
+          {hasAboutPage && (
+            <a
+              href="/about"
+              class="text-slate11 hover:text-slate12 text-base font-medium transition-colors"
+            >
+              About
+            </a>
+          )}
         </nav>
       )
     }
