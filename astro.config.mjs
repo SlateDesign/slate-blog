@@ -14,6 +14,7 @@ import rehypeFigure from 'rehype-figure';
 
 import { remarkModifiedTime } from './plugins/remark-modified-time';
 import { remarkReadingTime } from './plugins/remark-reading-time';
+import { rehypeTableWrapper } from './plugins/rehype-table-wrapper';
 import slateConfig from './slate.config';
 
 function computedIntegrations() {
@@ -48,7 +49,7 @@ function generateAstroConfigure() {
         // [codesandbox, { mode: 'button' }],
         remarkBlockContainers,
       ],
-      rehypePlugins: [rehypeKatex, rehypeFigure],
+      rehypePlugins: [rehypeKatex, rehypeFigure, rehypeTableWrapper],
     },
     vite: {
       plugins: [svgr(), tailwindcss()],

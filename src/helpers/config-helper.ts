@@ -1,7 +1,11 @@
 /*
  * @file: Configuration handler
  */
-import type { SlateConfig, ThemeOptions } from '@/typings/config';
+import type {
+  RelatedPostsOptions,
+  SlateConfig,
+  ThemeOptions,
+} from '@/typings/config';
 
 /** Default configuration */
 const defaultConfig: Partial<SlateConfig> = {
@@ -12,6 +16,10 @@ const defaultConfig: Partial<SlateConfig> = {
   },
   readTime: false,
   lastModified: false,
+  relatedPosts: {
+    enabled: false,
+    limit: 3,
+  },
 };
 
 export function defineConfig(config: SlateConfig): SlateConfig {
@@ -28,6 +36,15 @@ export function defineConfig(config: SlateConfig): SlateConfig {
       ...config.theme,
     };
   }
+
+  const relatedPosts = {
+    ...(defaultConfig.relatedPosts as RelatedPostsOptions),
+    ...config.relatedPosts,
+  };
+  if (!Number.isInteger(relatedPosts.limit) || (relatedPosts.limit ?? 0) <= 0) {
+    relatedPosts.limit = 3;
+  }
+  mergedConfig.relatedPosts = relatedPosts;
 
   return Object.assign({}, defaultConfig, config, mergedConfig);
 }

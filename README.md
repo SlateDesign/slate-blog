@@ -79,6 +79,7 @@ Theme configuration is done through `slate.config.ts` in the root directory.
 | sitemap | Website sitemap configuration | [SitemapOptions](https://docs.astro.build/en/guides/integrations-guide/sitemap/)  | - |
 | readTime | Show reading time | `boolean` | `false` |
 | lastModified | Show last modified time | `boolean` | `false` |
+| relatedPosts | Related-post recommendations | `{ enabled?: boolean, limit?: number }` | `{ enabled: false, limit: 3 }` |
 | algolia | Docsearch configuration | `{ appId: string, apiKey: string, indexName: string }` | - |
 | follow | Follow subscription authentication configuration | `{ feedId: string, userId: string }` | - |
 | footer | Website footer configuration | `{ copyright: string }` | - |
@@ -130,6 +131,20 @@ type SocialLinkIcon =
 
 **For more details, check the `src/content/config.ts` file**
 
+Tags are always available as filters on the home page. When related posts are
+enabled, tag overlap contributes 70% of the recommendation score and publication
+date proximity contributes 30%.
+
+```ts
+export default defineConfig({
+  // Other options...
+  relatedPosts: {
+    enabled: true,
+    limit: 3,
+  },
+});
+```
+
 ### Example
 
 ```md
@@ -173,6 +188,11 @@ Using `:::` markers
   ```
   
 ## Updates
+### Version 1.5.0
+- Added fixed-enabled tag filtering on the home page
+- Added optional related-post recommendations, disabled by default
+- Added deterministic recommendation scoring and localized discovery states
+
 ### Version 1.4.0
 - Replaced Heti with Pangu and removed the article-page runtime CDN dependency
 - Added light and dark code highlighting themes

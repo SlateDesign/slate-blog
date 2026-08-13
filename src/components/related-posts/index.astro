@@ -1,0 +1,65 @@
+---
+interface RelatedPost {
+  title: string;
+  slug: string;
+  description?: string;
+  pubDate: Date;
+  tags?: string[];
+}
+
+interface Props {
+  posts: RelatedPost[];
+  heading: string;
+  lang: string;
+}
+
+const { posts, heading, lang } = Astro.props;
+---
+
+<section class="related-posts border-slate4 mt-16 border-t pt-16">
+  <h2 class="mb-6 text-base! font-semibold">{heading}</h2>
+  <div class="text-slate12 text-base">
+    {
+      posts.map((post) => (
+        <a
+          class="related-posts-link group active:bg-slate4 sm:hover:bg-slate3 mt-4 flex cursor-pointer flex-col rounded-xl py-2.5 no-underline transition-all hover:no-underline active:scale-[0.995] sm:flex-row sm:items-start sm:px-2"
+          href={`/blog/${post.slug}`}
+          title={post.title}
+        >
+          <div class="min-w-0 flex-1">
+            <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between">
+              <span class="text-slate12 shrink-0 font-medium">
+                {post.title}
+              </span>
+              <span class="border-slate6 mx-8 hidden h-px w-full grow border-t border-dashed sm:flex" />
+              <time
+                class="text-slate8 shrink-0 text-base"
+                datetime={post.pubDate.toISOString()}
+              >
+                {post.pubDate.toLocaleDateString(lang, {
+                  year: 'numeric',
+                  month: 'short',
+                  day: 'numeric',
+                })}
+              </time>
+            </div>
+            {post.description && (
+              <p class="related-posts-description text-slate10 mt-2 line-clamp-2 text-sm">
+                {post.description}
+              </p>
+            )}
+            {post.tags && post.tags.length > 0 && (
+              <div class="mt-3 flex flex-wrap gap-1.5">
+                {post.tags?.slice(0, 3).map((tag) => (
+                  <span class="bg-slate3 text-slate10 group-hover:bg-slate4 rounded-full px-2 py-0.5 text-sm transition-colors">
+                    {tag}
+                  </span>
+                ))}
+              </div>
+            )}
+          </div>
+        </a>
+      ))
+    }
+  </div>
+</section>
