@@ -55,6 +55,11 @@ assert.match(
 );
 assert.match(
   header,
+  /hasNowPage\s*&&\s*\([\s\S]*?<nav/,
+  'Header must omit the complete nav element when the file is absent',
+);
+assert.match(
+  header,
   /href=["']\/now["'][\s\S]*?>\s*Now\s*</,
   'Header must expose the fixed Now destination and label',
 );
@@ -80,6 +85,11 @@ assert.match(
   nowRoute,
   /async\s+function\s+getStaticPaths[\s\S]*?if\s*\(!loadNowPage\)\s*return\s*\[\][\s\S]*?await\s+loadNowPage\(\)[\s\S]*?path:\s*undefined/,
   'Now route must emit no path when disabled and only the empty rest path when enabled',
+);
+assert.match(
+  nowRoute,
+  /if\s*\(!loadNowPage\)\s*return\s*\[\]/,
+  'Now route must return no static paths when the file is absent',
 );
 assert.match(
   nowRoute,
