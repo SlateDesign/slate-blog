@@ -130,8 +130,17 @@ assert.equal(
   'scroll fallback must select the last heading crossed by the threshold',
 );
 assert.equal(
-  getActiveHeadingSlug(positions, 1200, 120, 2000, 800),
-  'fourth',
+  getActiveHeadingSlug(
+    [
+      { slug: 'previous', offsetTop: 800 },
+      { slug: 'short-final-section', offsetTop: 1900 },
+    ],
+    1200,
+    120,
+    2000,
+    800,
+  ),
+  'short-final-section',
   'the final short section must become active when the document reaches bottom',
 );
 
