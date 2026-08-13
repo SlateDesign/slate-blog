@@ -9,6 +9,7 @@ export default {
     lastModified: '编辑于',
     readingTime: '{{minutes}} 分钟阅读',
     relatedPosts: '相关文章',
+    tableOfContents: '文章目录',
   },
   404: {
     pageText: '你访问的页面不存在',

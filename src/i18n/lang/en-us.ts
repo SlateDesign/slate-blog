@@ -13,6 +13,8 @@ export default {
     readingTime: '{{minutes}} Min Read',
     /** related posts */
     relatedPosts: 'Related posts',
+    /** table of contents */
+    tableOfContents: 'Contents',
   },
   /** 404 page */
   404: {

@@ -119,7 +119,11 @@ assert.equal(
 const read = (path) =>
   readFileSync(new URL(`../${path}`, import.meta.url), 'utf8');
 const tocComponent = read('src/components/toc/index.tsx');
+const mobileTocComponent = read('src/components/mobile-toc/index.tsx');
+const articlePage = read('src/pages/blog/[...slug].astro');
 const blogStyles = read('src/assets/style/blog.css');
+const english = read('src/i18n/lang/en-us.ts');
+const chinese = read('src/i18n/lang/zh-cn.ts');
 
 assert.match(
   tocComponent,
@@ -145,6 +149,59 @@ assert.match(
   blogStyles,
   /h2[\s\S]*h3[\s\S]*h4[\s\S]*scroll-margin-top:/,
   'article section headings must clear the floating title',
+);
+
+assert.match(
+  mobileTocComponent,
+  /<button[\s\S]*?aria-haspopup=["']dialog["'][\s\S]*?aria-expanded=/,
+  'mobile TOC must open from an accessible disclosure button',
+);
+assert.match(
+  mobileTocComponent,
+  /role=["']dialog["'][\s\S]*?aria-modal=["']true["']/,
+  'mobile TOC panel must expose modal dialog semantics',
+);
+assert.match(
+  mobileTocComponent,
+  /event\.key\s*===\s*['"]Escape['"][\s\S]*?closeDialog/,
+  'Escape must close the mobile TOC',
+);
+assert.match(
+  mobileTocComponent,
+  /event\.target\s*===\s*event\.currentTarget[\s\S]*?closeDialog/,
+  'clicking the overlay itself must dismiss the mobile TOC',
+);
+assert.match(
+  mobileTocComponent,
+  /previousOverflow\s*=\s*document\.body\.style\.overflow[\s\S]*?document\.body\.style\.overflow\s*=\s*['"]hidden['"][\s\S]*?document\.body\.style\.overflow\s*=\s*previousOverflow/,
+  'body scroll locking must restore the previous inline overflow value',
+);
+assert.match(
+  mobileTocComponent,
+  /aria-controls=\{isOpen\s*\?\s*dialogId[\s\S]*?id=\{dialogId\}[\s\S]*?role=["']dialog["']/,
+  'the disclosure control must reference the dialog element it opens',
+);
+assert.match(
+  mobileTocComponent,
+  /triggerRef\.current\?\.focus\(\)/,
+  'closing the mobile TOC must restore focus to its trigger',
+);
+assert.match(
+  mobileTocComponent,
+  /matchMedia\(['"]\(min-width:\s*1280px\)['"]\)[\s\S]*?closeDialog/,
+  'crossing into the xl desktop breakpoint must close the mobile dialog',
+);
+assert.match(
+  articlePage,
+  /<MobileToc[\s\S]*?dataSource=\{headings\}[\s\S]*?client:/,
+  'article pages must hydrate the mobile TOC with the same heading records',
+);
+assert.match(english, /tableOfContents:/, 'English mobile TOC copy must exist');
+assert.match(chinese, /tableOfContents:/, 'Chinese mobile TOC copy must exist');
+assert.match(
+  blogStyles,
+  /prefers-reduced-motion:\s*reduce[\s\S]*?mobile-toc/,
+  'mobile TOC motion must be disabled when reduced motion is preferred',
 );
 
 console.log('reading navigation tests passed');

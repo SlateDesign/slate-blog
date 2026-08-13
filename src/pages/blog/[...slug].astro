@@ -7,6 +7,7 @@ import ArticleJsonLd from '@/components/json-ld/article.astro';
 import Button from '@/components/button';
 import AffixTitle from '@/components/affix-title';
 import Toc from '@/components/toc';
+import MobileToc from '@/components/mobile-toc';
 import CodeGroupEvent from '@/components/code-group-event';
 import RelatedPosts from '@/components/related-posts/index.astro';
 import slateConfig from '~@/slate.config';
@@ -115,6 +116,11 @@ const formattedPubDate = pubDate.isSame(dayjs(), 'year')
     listClassName="px-5 pt-44 pb-14 "
     dataSource={headings}
     client:visible
+  />
+  <MobileToc
+    dataSource={headings}
+    label={i18next.t('blog.tableOfContents')}
+    client:idle
   />
   <!-- E 目录 -->
 </PageLayout>
