@@ -176,6 +176,15 @@
     box-shadow: none !important;
   }
 
+  .expressive-code figure > figcaption.header {
+    border: 0 !important;
+    border-radius: 0 !important;
+  }
+
+  .expressive-code figure > figcaption.header::before {
+    border: 0 !important;
+  }
+
   /* 两张图片分栏 */
   .rehype-figure-container:has(> .rehype-figure:nth-child(2)) {
     column-count: 2;

@@ -199,6 +199,16 @@ assert.match(
   /\.expressive-code\s+pre,\s*figure\.expressive-code\s+pre\s*\{[\s\S]*?overflow-x-auto[\s\S]*?border:\s*0\s*!important;[\s\S]*?border-radius:\s*0\s*!important;[\s\S]*?box-shadow:\s*none\s*!important/,
   'the code pre must scroll without adding a second frame',
 );
+assert.match(
+  blogStyles,
+  /\.expressive-code\s+figure\s*>\s*figcaption\.header\s*\{[\s\S]*?border:\s*0\s*!important;[\s\S]*?border-radius:\s*0\s*!important/,
+  'code frame headers must not draw a second border or corner radius',
+);
+assert.match(
+  blogStyles,
+  /\.expressive-code\s+figure\s*>\s*figcaption\.header::before\s*\{[\s\S]*?border:\s*0\s*!important/,
+  'code frame header pseudo-elements must not draw a second outline',
+);
 assert.doesNotMatch(
   blogStyles,
   /var\(--slate6\)/,
