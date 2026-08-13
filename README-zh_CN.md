@@ -58,6 +58,7 @@ pnpm build
   ├── components/     # 组件
   ├── content/        # 内容集合与可选页面
   │   ├── now.md      # 可选 /now 页面，删除即可关闭
+  │   ├── about.md    # 可选 /about 页面，删除即可关闭
   │   └── post/       # 博客文章
   ├── helpers/        # 业务逻辑
   ├── pages/          # 页面
@@ -68,6 +69,10 @@ pnpm build
 ### 可选 Now 页面
 
 `src/content/now.md` 会启用 `/now` 页面及 Header 中的 Now 入口。仓库随附示例，因此默认启用。该页面与博客文章共用完整 Markdown 渲染链路和正文样式，包括代码块、表格、数学公式、容器及图片说明。删除 `src/content/now.md` 会同时移除导航入口、页面路由和 sitemap 地址。
+
+### 可选 About 页面
+
+`src/content/about.md` 是 `/about` 页面及 Header 中 About 入口的唯一开关。仓库模板包含该文件，因此 About 默认启用。`/about` 与文章和 Now 页面共用完整 Markdown 渲染链路和排版样式，包括代码块、表格、数学公式、容器及图片说明。删除 `src/content/about.md` 会移除 About 导航、路由和 sitemap 地址，而 Now 仍由 `now.md` 独立控制。
 
 ## 配置
 
@@ -205,6 +210,11 @@ pubDate: 2025-01-06
 ```
 
 ## 更新日志
+
+### 版本 1.8.0
+
+- 新增由 `src/content/about.md` 驱动、支持完整 Markdown 的可选 About 页面
+- Now 与 About 独立启停，并共享严格的文件发现逻辑
 
 ### 版本 1.7.0
 

@@ -56,6 +56,40 @@ assert.equal(
 const read = (path) =>
   readFileSync(new URL(`../${path}`, import.meta.url), 'utf8');
 
+const readme = read('README.md');
+const chineseReadme = read('README-zh_CN.md');
+
+for (const requiredText of [
+  'src/content/about.md',
+  '/about',
+  'Optional About page',
+  'Version 1.8.0',
+]) {
+  assert.ok(readme.includes(requiredText), `README.md must document ${requiredText}`);
+}
+
+assert.match(
+  readme,
+  /Deleting `src\/content\/about\.md` removes the About navigation, route, and sitemap URL without disabling Now\./,
+);
+
+for (const requiredText of [
+  'src/content/about.md',
+  '/about',
+  '可选 About 页面',
+  '版本 1.8.0',
+]) {
+  assert.ok(
+    chineseReadme.includes(requiredText),
+    `README-zh_CN.md must document ${requiredText}`,
+  );
+}
+
+assert.match(
+  chineseReadme,
+  /删除 `src\/content\/about\.md` 会移除 About 导航、路由和 sitemap 地址，而 Now 仍由 `now\.md` 独立控制。/,
+);
+
 const matrixSource = read('scripts/test-optional-pages-build.mjs');
 
 assert.match(matrixSource, /mkdtemp\(/);
