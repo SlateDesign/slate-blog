@@ -7,11 +7,13 @@ import ArticleJsonLd from '@/components/json-ld/article.astro';
 import Button from '@/components/button';
 import AffixTitle from '@/components/affix-title';
 import Toc from '@/components/toc';
+import MobileToc from '@/components/mobile-toc';
 import CodeGroupEvent from '@/components/code-group-event';
 import RelatedPosts from '@/components/related-posts/index.astro';
 import slateConfig from '~@/slate.config';
 import { getFullTitle } from '@/helpers/utils';
 import { getRelatedPosts } from '@/helpers/related-posts';
+import { buildChatGPTReadingUrl } from '@/helpers/reading-navigation';
 import 'remark-block-containers/css';
 import '@/assets/style/blog.css';
 
@@ -56,6 +58,13 @@ const pubDate = dayjs(post.data.pubDate);
 const formattedPubDate = pubDate.isSame(dayjs(), 'year')
   ? pubDate.format('MMM DD')
   : pubDate.format('MMM DD, YYYY');
+const chatGPTReadingUrl = slateConfig.readWithChatGPT
+  ? buildChatGPTReadingUrl(
+      slateConfig.site,
+      post.slug,
+      i18next.t('blog.readWithChatGPTPrompt'),
+    )
+  : '';
 ---
 
 <PageLayout title={post.data.title} description={post.data.description}>
@@ -67,7 +76,14 @@ const formattedPubDate = pubDate.isSame(dayjs(), 'year')
     lastModified={lastModifiedDate.toDate()}
   />
   <CodeGroupEvent client:only="react" />
-  <AffixTitle title={post.data.title} offsetTop={100} client:idle />
+  <AffixTitle
+    title={post.data.title}
+    offsetTop={100}
+    readingProgress={slateConfig.readingProgress}
+    progressiveBlur={slateConfig.progressiveBlur}
+    progressLabel={i18next.t('blog.readingProgress')}
+    client:idle
+  />
 
   <div class="mb-16" slot="header">
     <Button id="back">←</Button>
@@ -76,7 +92,7 @@ const formattedPubDate = pubDate.isSame(dayjs(), 'year')
   <div class="blog-content">
     <div class="mb-16">
       <h1>{post.data.title}</h1>
-      <div class="text-slate10 flex items-center gap-2">
+      <div class="text-slate10 flex flex-wrap items-center gap-2">
         <span>{formattedPubDate}</span>
         {!!slateConfig.readTime && <span>·</span>}
         {
@@ -86,6 +102,22 @@ const formattedPubDate = pubDate.isSame(dayjs(), 'year')
                 minutes: remarkPluginFrontmatter.minutesRead,
               })}
             </div>
+          )
+        }
+        {
+          slateConfig.readWithChatGPT && (
+            <>
+              <span>·</span>
+              <a
+                href={chatGPTReadingUrl}
+                target="_blank"
+                rel="noopener noreferrer"
+                aria-label={i18next.t('blog.readWithChatGPT')}
+                class="read-with-chatgpt hover:text-slate12 focus-visible:ring-indigo8 rounded-sm transition-colors focus-visible:ring-2 focus-visible:outline-none"
+              >
+                {i18next.t('blog.readWithChatGPT')}
+              </a>
+            </>
           )
         }
       </div>
@@ -115,6 +147,12 @@ const formattedPubDate = pubDate.isSame(dayjs(), 'year')
     listClassName="px-5 pt-44 pb-14 "
     dataSource={headings}
     client:visible
+  />
+  <MobileToc
+    dataSource={headings}
+    label={i18next.t('blog.tableOfContents')}
+    closeLabel={i18next.t('blog.closeTableOfContents')}
+    client:load
   />
   <!-- E 目录 -->
 </PageLayout>

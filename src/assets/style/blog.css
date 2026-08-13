@@ -18,6 +18,14 @@
     @apply text-slate12 my-2 text-base leading-normal font-semibold;
   }
 
+  h2,
+  h3,
+  h4,
+  h5,
+  h6 {
+    scroll-margin-top: 6rem;
+  }
+
   p {
     @apply text-slate12 my-6 mt-4 text-base leading-relaxed;
   }
@@ -28,6 +36,11 @@
 
   .related-posts-link,
   .related-posts-link:hover {
+    text-decoration-line: none;
+  }
+
+  .read-with-chatgpt,
+  .read-with-chatgpt:hover {
     text-decoration-line: none;
   }
 
@@ -229,7 +242,7 @@
     @apply relative mb-2 break-inside-avoid;
 
     figcaption {
-      @apply absolute overflow-hidden overflow-ellipsis max-w-[calc(100%-16px)] bottom-2 right-2 bg-black/50 rounded-lg px-2 py-1 text-white;
+      @apply absolute right-2 bottom-2 max-w-[calc(100%-16px)] overflow-hidden rounded-lg bg-black/50 px-2 py-1 overflow-ellipsis text-white;
     }
   }
 
@@ -238,7 +251,7 @@
   .rehype-figure-container:has(> .rehype-figure:nth-child(4)) img,
   .rehype-figure-container:has(> .rehype-figure:nth-child(5)) img,
   .rehype-figure-container:has(> .rehype-figure:nth-child(6)) img {
-    @apply m-0 border-slate6 rounded-2xl border;
+    @apply border-slate6 m-0 rounded-2xl border;
   }
 
   /* 针对6图模式调整间距 */

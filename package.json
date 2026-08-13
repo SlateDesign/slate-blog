@@ -26,6 +26,7 @@
     "lint-fix:script": "npm run lint:script -- --fix",
     "lint:script": "eslint",
     "test:discovery": "node scripts/test-discovery.mjs",
+    "test:reading-navigation": "node scripts/test-reading-navigation.mjs",
     "test:typesetting": "node scripts/test-typesetting.mjs",
     "format": "prettier --write \"src/**/*.{js,ts,jsx,tsx,astro}\"",
     "sync-latest": "./scripts/sync-latest-blog.sh"
@@ -50,6 +51,7 @@
     "i18next": "^24.2.2",
     "mdast-util-to-string": "^4.0.0",
     "pangu": "7.2.1",
+    "progressive-blur": "^1.0.0",
     "react": "^18.3.1",
     "react-dom": "^18.3.1",
     "reading-time": "^1.5.0",

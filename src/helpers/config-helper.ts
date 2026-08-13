@@ -16,6 +16,9 @@ const defaultConfig: Partial<SlateConfig> = {
   },
   readTime: false,
   lastModified: false,
+  readingProgress: true,
+  progressiveBlur: true,
+  readWithChatGPT: false,
   relatedPosts: {
     enabled: false,
     limit: 3,
