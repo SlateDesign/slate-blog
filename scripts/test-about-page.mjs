@@ -40,6 +40,12 @@ const modules = {
   '/src/content/about.md': aboutModule,
 };
 
+const wrongOnlyAboutModules = {
+  '/src/content/about.mdx': { id: 'wrong-about-extension' },
+  '/src/content/pages/about.md': { id: 'nested-about' },
+  '/src/content/about.md.backup': { id: 'approximate-about-name' },
+};
+
 assert.equal(
   findOptionalPage(modules, OPTIONAL_PAGE_SOURCES.now),
   nowModule,
@@ -47,6 +53,11 @@ assert.equal(
 assert.equal(
   findOptionalPage(modules, OPTIONAL_PAGE_SOURCES.about),
   aboutModule,
+);
+assert.equal(
+  findOptionalPage(wrongOnlyAboutModules, OPTIONAL_PAGE_SOURCES.about),
+  undefined,
+  'About discovery must ignore wrong-only module tables',
 );
 assert.equal(
   findOptionalPage({}, OPTIONAL_PAGE_SOURCES.about),
@@ -153,6 +164,18 @@ assertReleaseSection(chineseReadme, '### 版本 1.8.0', [
 ]);
 
 const matrixSource = read('scripts/test-optional-pages-build.mjs');
+const packageJson = JSON.parse(read('package.json'));
+
+assert.equal(
+  packageJson.scripts['test:optional-pages-build'],
+  'pnpm test:optional-pages-build-safety && pnpm test:optional-pages-build:matrix',
+  'the public optional-pages gate must run safety before the matrix',
+);
+assert.equal(
+  packageJson.scripts['test:optional-pages-build:matrix'],
+  'node scripts/test-optional-pages-build.mjs',
+  'the direct matrix command must remain available to the composite gate',
+);
 
 assert.match(matrixSource, /mkdtemp\(/);
 assert.match(matrixSource, /slate-v18-optional-pages-/);
@@ -164,6 +187,13 @@ assert.match(matrixSource, /lstat\(/);
 assert.match(matrixSource, /isSymbolicLink\(\)/);
 assert.match(matrixSource, /withValidatedTempParent/);
 assert.match(matrixSource, /isMain/);
+assert.match(matrixSource, /git[\s\S]*rev-parse[\s\S]*--local-env-vars/);
+assert.match(matrixSource, /createGitCleanEnv/);
+assert.match(
+  matrixSource,
+  /env:\s*createGitDiscoveryEnv\(inheritedEnv\)/,
+  'Git metadata discovery must ignore inherited GIT_* selectors',
+);
 assert.doesNotMatch(
   matrixSource,
   /process\.cwd\(\)[\s\S]*recursive:\s*true/,

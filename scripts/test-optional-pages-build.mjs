@@ -35,15 +35,52 @@ const exists = async (path) => {
   }
 };
 
-const build = (copyRoot, repoGitDir) =>
+// These rev-parse calls discover the local-variable list itself, so they must
+// not trust any inherited GIT_* selector. The build environment is cleaned
+// more narrowly below and preserves non-local Git settings.
+const createGitDiscoveryEnv = (inheritedEnv) =>
+  Object.fromEntries(
+    Object.entries(inheritedEnv).filter(([name]) => !name.startsWith('GIT_')),
+  );
+
+export const getGitLocalEnvVars = (inheritedEnv = process.env) =>
+  execFileSync('git', ['rev-parse', '--local-env-vars'], {
+    cwd: repoRoot,
+    encoding: 'utf8',
+    env: createGitDiscoveryEnv(inheritedEnv),
+  })
+    .split(/\r?\n/)
+    .filter(Boolean);
+
+const getRepositoryGitDir = async (inheritedEnv = process.env) =>
+  realpath(
+    execFileSync('git', ['rev-parse', '--absolute-git-dir'], {
+      cwd: repoRoot,
+      encoding: 'utf8',
+      env: createGitDiscoveryEnv(inheritedEnv),
+    }).trim(),
+  );
+
+export const createGitCleanEnv = ({
+  inheritedEnv,
+  localGitVariables,
+  gitDir,
+  workTree,
+}) => {
+  const cleanEnv = { ...inheritedEnv };
+
+  for (const name of localGitVariables) delete cleanEnv[name];
+
+  cleanEnv.GIT_DIR = gitDir;
+  cleanEnv.GIT_WORK_TREE = workTree;
+  return cleanEnv;
+};
+
+const build = (copyRoot, env) =>
   new Promise((resolve, reject) => {
     const child = spawn('pnpm', ['build'], {
       cwd: copyRoot,
-      env: {
-        ...process.env,
-        GIT_DIR: repoGitDir,
-        GIT_WORK_TREE: copyRoot,
-      },
+      env,
     });
     let stdout = '';
     let stderr = '';
@@ -126,12 +163,9 @@ export const removeOptionalPage = async (copyRoot, page) => {
 };
 
 export const runMatrix = async () => {
-  const repoGitDir = await realpath(
-    execFileSync('git', ['rev-parse', '--absolute-git-dir'], {
-      cwd: repoRoot,
-      encoding: 'utf8',
-    }).trim(),
-  );
+  const inheritedEnv = process.env;
+  const localGitVariables = getGitLocalEnvVars(inheritedEnv);
+  const repoGitDir = await getRepositoryGitDir(inheritedEnv);
   const excludedRoots = new Set(
     ['.git', 'node_modules', 'dist', '.astro', 'docs', '.superpowers'].map(
       (name) => join(repoRoot, name),
@@ -164,7 +198,15 @@ export const runMatrix = async () => {
         if (!present) await removeOptionalPage(copyRoot, page);
       }
 
-      const result = await build(copyRoot, repoGitDir);
+      const result = await build(
+        resolvedCopyRoot,
+        createGitCleanEnv({
+          inheritedEnv,
+          localGitVariables,
+          gitDir: repoGitDir,
+          workTree: resolvedCopyRoot,
+        }),
+      );
       const buildLog = `${result.stdout}\n${result.stderr}`;
 
       assert.equal(result.code, 0, `${state.name} build failed:\n${buildLog}`);

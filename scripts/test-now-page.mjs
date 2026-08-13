@@ -24,6 +24,17 @@ assert.equal(OPTIONAL_PAGE_SOURCES.now, '/src/content/now.md');
 assert.equal(findOptionalPage({}, OPTIONAL_PAGE_SOURCES.now), undefined);
 
 const expected = { Content: 'compiled-now-page' };
+const wrongOnlyNowModules = {
+  '/src/content/now.mdx': { Content: 'wrong-extension' },
+  '/src/content/nested/now.md': { Content: 'wrong-directory' },
+  '/src/content/now.md.backup': { Content: 'approximate-name' },
+};
+
+assert.equal(
+  findOptionalPage(wrongOnlyNowModules, OPTIONAL_PAGE_SOURCES.now),
+  undefined,
+  'Now discovery must ignore wrong-only module tables',
+);
 assert.equal(
   findOptionalPage({
     '/src/content/config.ts': {},
