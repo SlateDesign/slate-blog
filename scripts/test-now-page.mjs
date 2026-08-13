@@ -102,4 +102,19 @@ assert.doesNotMatch(
   'Now route must not create a second Markdown parsing pipeline',
 );
 
+const defaultNow = read('src/content/now.md');
+
+assert.match(defaultNow, /^## What I'm doing now$/m);
+assert.match(defaultNow, /^## About this page$/m);
+assert.match(defaultNow, /https:\/\/nownownow\.com\/about/);
+assert.match(
+  defaultNow,
+  /delete `src\/content\/now\.md`\s+to disable the page/i,
+);
+assert.doesNotMatch(
+  defaultNow,
+  /^---\s*[\s\S]*?\b(?:title|pubDate|draft):/,
+  'the default Now page must not require article frontmatter',
+);
+
 console.log('optional now page tests passed');
