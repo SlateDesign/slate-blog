@@ -16,6 +16,8 @@ const defaultConfig: Partial<SlateConfig> = {
   },
   readTime: false,
   lastModified: false,
+  readingProgress: true,
+  progressiveBlur: true,
   relatedPosts: {
     enabled: false,
     limit: 3,

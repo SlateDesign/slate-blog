@@ -15,6 +15,8 @@ export default {
     relatedPosts: 'Related posts',
     /** table of contents */
     tableOfContents: 'Contents',
+    /** reading progress */
+    readingProgress: 'Reading progress',
   },
   /** 404 page */
   404: {

@@ -22,6 +22,39 @@ const {
   getActiveHeadingSlug,
   getHeadingScrollTop,
 } = await importTypeScript('src/helpers/reading-navigation.ts');
+const { defineConfig } = await importTypeScript('src/helpers/config-helper.ts');
+
+const requiredConfig = {
+  site: 'https://example.com',
+  title: 'Example',
+  description: 'Example blog',
+};
+const readingDefaults = defineConfig(requiredConfig);
+assert.equal(
+  readingDefaults.readingProgress,
+  true,
+  'reading progress must be enabled by default',
+);
+assert.equal(
+  readingDefaults.progressiveBlur,
+  true,
+  'progressive blur must be enabled by default',
+);
+const disabledReadingFeatures = defineConfig({
+  ...requiredConfig,
+  readingProgress: false,
+  progressiveBlur: false,
+});
+assert.equal(
+  disabledReadingFeatures.readingProgress,
+  false,
+  'an explicit false must disable reading progress',
+);
+assert.equal(
+  disabledReadingFeatures.progressiveBlur,
+  false,
+  'an explicit false must disable progressive blur',
+);
 
 const headings = [
   { depth: 1, slug: 'title', text: 'Title' },
@@ -120,8 +153,13 @@ const read = (path) =>
   readFileSync(new URL(`../${path}`, import.meta.url), 'utf8');
 const tocComponent = read('src/components/toc/index.tsx');
 const mobileTocComponent = read('src/components/mobile-toc/index.tsx');
+const circularProgressComponent = read(
+  'src/components/circular-progress/index.tsx',
+);
+const affixTitleComponent = read('src/components/affix-title/index.tsx');
 const articlePage = read('src/pages/blog/[...slug].astro');
 const blogStyles = read('src/assets/style/blog.css');
+const commonStyles = read('src/assets/style/common.css');
 const english = read('src/i18n/lang/en-us.ts');
 const chinese = read('src/i18n/lang/zh-cn.ts');
 
@@ -202,6 +240,57 @@ assert.match(
   blogStyles,
   /prefers-reduced-motion:\s*reduce[\s\S]*?mobile-toc/,
   'mobile TOC motion must be disabled when reduced motion is preferred',
+);
+
+assert.match(
+  circularProgressComponent,
+  /addEventListener\(['"]scroll['"][\s\S]*?passive:\s*true/,
+  'circular progress must use a passive scroll listener',
+);
+assert.match(
+  circularProgressComponent,
+  /requestAnimationFrame[\s\S]*?cancelAnimationFrame/,
+  'circular progress must schedule and clean up animation frames',
+);
+assert.match(
+  circularProgressComponent,
+  /calculateReadingProgress/,
+  'the UI must use the tested safe progress calculation',
+);
+assert.match(
+  circularProgressComponent,
+  /role=["']progressbar["'][\s\S]*?aria-valuenow/,
+  'reading progress must expose its percentage to assistive technology',
+);
+assert.match(
+  circularProgressComponent,
+  /isComplete[\s\S]*?aria-hidden=["']true["'][\s\S]*?✓/,
+  'one hundred percent must render a visual completion state',
+);
+assert.match(
+  affixTitleComponent,
+  /readingProgress[\s\S]*?<CircularProgress/,
+  'disabling reading progress must hide only the circular indicator',
+);
+assert.match(
+  affixTitleComponent,
+  /progressiveBlur[\s\S]*?affix-title-progressive-blur[\s\S]*?affix-title-fallback/,
+  'floating title must switch between progressive and fallback backgrounds',
+);
+assert.match(
+  articlePage,
+  /readingProgress=\{slateConfig\.readingProgress\}[\s\S]*?progressiveBlur=\{slateConfig\.progressiveBlur\}/,
+  'article pages must pass normalized reading UI settings to the floating title',
+);
+assert.match(
+  commonStyles,
+  /\.affix-title-progressive-blur::before[\s\S]*?backdrop-filter:[\s\S]*?mask-image:/,
+  'progressive blur must fade a separate backdrop layer toward the article',
+);
+assert.match(
+  commonStyles,
+  /\.affix-title-fallback[\s\S]*?backdrop-filter:/,
+  'disabled progressive blur must retain an ordinary backdrop blur',
 );
 
 console.log('reading navigation tests passed');

@@ -10,6 +10,7 @@ export default {
     readingTime: '{{minutes}} 分钟阅读',
     relatedPosts: '相关文章',
     tableOfContents: '文章目录',
+    readingProgress: '阅读进度',
   },
   404: {
     pageText: '你访问的页面不存在',

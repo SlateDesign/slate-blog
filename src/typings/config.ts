@@ -61,6 +61,10 @@ export interface SlateConfig {
   readTime?: boolean;
   /** Whether to show last modified time */
   lastModified?: boolean;
+  /** Whether to show the circular reading progress */
+  readingProgress?: boolean;
+  /** Whether to use a progressively fading blur behind the floating title */
+  progressiveBlur?: boolean;
   /** Related-post recommendations */
   relatedPosts?: RelatedPostsOptions;
   /** Docsearch configuration */

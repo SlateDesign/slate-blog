@@ -1,22 +1,22 @@
-@import "tailwindcss";
-@import "@radix-ui/colors/gray.css";
-@import "@radix-ui/colors/blue.css";
-@import "@radix-ui/colors/red.css";
-@import "@radix-ui/colors/green.css";
-@import "@radix-ui/colors/slate.css";
-@import "@radix-ui/colors/tomato.css";
-@import "@radix-ui/colors/amber.css";
-@import "@radix-ui/colors/indigo.css";
-@import "@radix-ui/colors/orange.css";
-@import "@radix-ui/colors/gray-dark.css";
-@import "@radix-ui/colors/blue-dark.css";
-@import "@radix-ui/colors/red-dark.css";
-@import "@radix-ui/colors/green-dark.css";
-@import "@radix-ui/colors/slate-dark.css";
-@import "@radix-ui/colors/tomato-dark.css";
-@import "@radix-ui/colors/amber-dark.css";
-@import "@radix-ui/colors/indigo-dark.css";
-@import "@radix-ui/colors/orange-dark.css";
+@import 'tailwindcss';
+@import '@radix-ui/colors/gray.css';
+@import '@radix-ui/colors/blue.css';
+@import '@radix-ui/colors/red.css';
+@import '@radix-ui/colors/green.css';
+@import '@radix-ui/colors/slate.css';
+@import '@radix-ui/colors/tomato.css';
+@import '@radix-ui/colors/amber.css';
+@import '@radix-ui/colors/indigo.css';
+@import '@radix-ui/colors/orange.css';
+@import '@radix-ui/colors/gray-dark.css';
+@import '@radix-ui/colors/blue-dark.css';
+@import '@radix-ui/colors/red-dark.css';
+@import '@radix-ui/colors/green-dark.css';
+@import '@radix-ui/colors/slate-dark.css';
+@import '@radix-ui/colors/tomato-dark.css';
+@import '@radix-ui/colors/amber-dark.css';
+@import '@radix-ui/colors/indigo-dark.css';
+@import '@radix-ui/colors/orange-dark.css';
 
 @custom-variant dark (&:where(.dark, .dark *));
 
@@ -139,5 +139,44 @@
 }
 
 body {
-  @apply text-sm text-slate12;
+  @apply text-slate12 text-sm;
+}
+
+.affix-title-progressive-blur {
+  isolation: isolate;
+}
+
+.affix-title-progressive-blur::before {
+  content: '';
+  position: absolute;
+  z-index: -1;
+  inset: 0 0 -2rem;
+  pointer-events: none;
+  background: linear-gradient(
+    to bottom,
+    color-mix(in srgb, var(--slate-1) 82%, transparent),
+    transparent
+  );
+  -webkit-backdrop-filter: blur(18px);
+  backdrop-filter: blur(18px);
+  -webkit-mask-image: linear-gradient(
+    to bottom,
+    black 0%,
+    black 54%,
+    transparent 100%
+  );
+  mask-image: linear-gradient(to bottom, black 0%, black 54%, transparent 100%);
+}
+
+.affix-title-fallback {
+  background: color-mix(in srgb, var(--slate-1) 90%, transparent);
+  -webkit-backdrop-filter: blur(12px);
+  backdrop-filter: blur(12px);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .affix-title-progressive-blur,
+  .affix-title-fallback {
+    transition-duration: 0ms;
+  }
 }

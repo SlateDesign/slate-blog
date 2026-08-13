@@ -68,7 +68,14 @@ const formattedPubDate = pubDate.isSame(dayjs(), 'year')
     lastModified={lastModifiedDate.toDate()}
   />
   <CodeGroupEvent client:only="react" />
-  <AffixTitle title={post.data.title} offsetTop={100} client:idle />
+  <AffixTitle
+    title={post.data.title}
+    offsetTop={100}
+    readingProgress={slateConfig.readingProgress}
+    progressiveBlur={slateConfig.progressiveBlur}
+    progressLabel={i18next.t('blog.readingProgress')}
+    client:idle
+  />
 
   <div class="mb-16" slot="header">
     <Button id="back">←</Button>
