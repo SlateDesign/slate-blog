@@ -64,4 +64,42 @@ assert.match(
   'Header navigation must match the personal-blog layout and typography',
 );
 
+const nowRoute = read('src/pages/now/[...path].astro');
+
+assert.match(
+  nowRoute,
+  /import\.meta\.glob<[^>]+>\(['"]\/src\/content\/\*['"]\)/,
+  'Now route must discover Astro-compiled root content through lazy loaders',
+);
+assert.doesNotMatch(
+  nowRoute,
+  /import\.meta\.glob\([^)]*eager:\s*true/,
+  'Now route must not eagerly import unrelated root content modules',
+);
+assert.match(
+  nowRoute,
+  /async\s+function\s+getStaticPaths[\s\S]*?if\s*\(!loadNowPage\)\s*return\s*\[\][\s\S]*?await\s+loadNowPage\(\)[\s\S]*?path:\s*undefined/,
+  'Now route must emit no path when disabled and only the empty rest path when enabled',
+);
+assert.match(
+  nowRoute,
+  /const\s*\{\s*Content\s*\}\s*=\s*Astro\.props[\s\S]*?<Content\s*\/>/,
+  'Now route must render the compiled Markdown Content component',
+);
+assert.match(
+  nowRoute,
+  /<PageLayout\s+title=["']Now["'][\s\S]*?class=["']blog-content["']/,
+  'Now route must use the standard layout and article typography',
+);
+assert.match(
+  nowRoute,
+  /pangu\/browser[\s\S]*?spacingNode/,
+  'Now route must apply the same Pangu spacing enhancement as articles',
+);
+assert.doesNotMatch(
+  nowRoute,
+  /from\s+["'](?:fs|node:fs|marked)["']|readFileSync|set:html/,
+  'Now route must not create a second Markdown parsing pipeline',
+);
+
 console.log('optional now page tests passed');
