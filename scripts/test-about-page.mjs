@@ -59,36 +59,98 @@ const read = (path) =>
 const readme = read('README.md');
 const chineseReadme = read('README-zh_CN.md');
 
-for (const requiredText of [
+const escapeRegExp = (value) => value.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+
+const extractDirectoryTree = (source, heading) => {
+  const match = source.match(
+    new RegExp(
+      `^${escapeRegExp(heading)}\\n\\n` + '```' + '\\n([\\s\\S]*?)^```$',
+      'm',
+    ),
+  );
+  assert.ok(match, `${heading} must contain a fenced directory tree`);
+  return match[1];
+};
+
+const extractSection = (source, heading) => {
+  const level = heading.match(/^(#+) /)?.[1];
+  assert.ok(level, `${heading} must be a Markdown heading`);
+  const match = source.match(
+    new RegExp(
+      `^${escapeRegExp(heading)}\\n([\\s\\S]*?)(?=^${escapeRegExp(level)} |(?![\\s\\S]))`,
+      'm',
+    ),
+  );
+  assert.ok(match, `${heading} section is required`);
+  return match[1];
+};
+
+const assertContentTree = (tree, locale) => {
+  assert.match(
+    tree,
+    /- src\/\n[\s\S]*? {2}├── content\/[^\n]*\n {2}│ {3}├── now\.md[^\n]*\n {2}│ {3}├── about\.md[^\n]*\n {2}│ {3}└── post\//,
+    `${locale} directory tree must list adjacent now.md and about.md under src/content`,
+  );
+};
+
+const assertEnglishAboutSection = (source) => {
+  const section = extractSection(source, '### Optional About page');
+  assert.match(section, /`src\/content\/about\.md` is the exact switch/);
+  assert.match(section, /About is enabled by default/);
+  assert.match(section, /`\/about` uses the full article\/Now Markdown pipeline and typography/);
+  assert.match(
+    section,
+    /Deleting `src\/content\/about\.md` removes the About navigation, route, and sitemap URL without disabling Now\./,
+  );
+};
+
+const assertChineseAboutSection = (source) => {
+  const section = extractSection(source, '### 可选 About 页面');
+  assert.match(section, /`src\/content\/about\.md` 是 `\/about` 页面及 Header 中 About 入口的唯一开关/);
+  assert.match(section, /About 默认启用/);
+  assert.match(section, /`\/about` 与文章和 Now 页面共用完整 Markdown 渲染链路和排版样式/);
+  assert.match(
+    section,
+    /删除 `src\/content\/about\.md` 会移除 About 导航、路由和 sitemap 地址，而 Now 仍由 `now\.md` 独立控制。/,
+  );
+};
+
+const assertReleaseSection = (source, heading, expectedEntries) => {
+  const section = extractSection(source, heading);
+  for (const entry of expectedEntries) {
+    assert.ok(section.includes(entry), `${heading} must include ${entry}`);
+  }
+};
+
+const detachedAboutDocumentation = `### Optional About page
+
+The optional page is documented here.
+
+### Elsewhere
+
+\`src/content/about.md\` is the exact switch. About is enabled by default. \`/about\` uses the full article/Now Markdown pipeline and typography. Deleting \`src/content/about.md\` removes the About navigation, route, and sitemap URL without disabling Now.`;
+
+for (const keyword of [
   'src/content/about.md',
   '/about',
   'Optional About page',
-  'Version 1.8.0',
 ]) {
-  assert.ok(readme.includes(requiredText), `README.md must document ${requiredText}`);
+  assert.ok(detachedAboutDocumentation.includes(keyword));
 }
+assert.throws(() => assertEnglishAboutSection(detachedAboutDocumentation));
 
-assert.match(
-  readme,
-  /Deleting `src\/content\/about\.md` removes the About navigation, route, and sitemap URL without disabling Now\./,
-);
-
-for (const requiredText of [
-  'src/content/about.md',
-  '/about',
-  '可选 About 页面',
-  '版本 1.8.0',
-]) {
-  assert.ok(
-    chineseReadme.includes(requiredText),
-    `README-zh_CN.md must document ${requiredText}`,
-  );
-}
-
-assert.match(
-  chineseReadme,
-  /删除 `src\/content\/about\.md` 会移除 About 导航、路由和 sitemap 地址，而 Now 仍由 `now\.md` 独立控制。/,
-);
+assertContentTree(extractDirectoryTree(readme, '## 🗂 Directory Structure'), 'English');
+assertContentTree(extractDirectoryTree(chineseReadme, '## 🗂 目录'), 'Chinese');
+assertEnglishAboutSection(readme);
+assertChineseAboutSection(chineseReadme);
+assertReleaseSection(readme, '### Version 1.8.0', [
+  'Added an optional, complete-Markdown About page driven by `src/content/about.md`',
+  'Shared exact file discovery between the independent Now and About pages',
+]);
+assertReleaseSection(chineseReadme, '### 版本 1.8.0', [
+  '新增由 `src/content/about.md` 驱动、支持完整 Markdown 的可选 About 页面',
+  'Now 与 About 独立启停，并共享严格的文件发现逻辑',
+]);
 
 const matrixSource = read('scripts/test-optional-pages-build.mjs');
 
