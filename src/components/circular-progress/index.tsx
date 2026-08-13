@@ -85,7 +85,7 @@ export default function CircularProgress({
           strokeDasharray={circumference}
           strokeDashoffset={circumference * (1 - progress / 100)}
           strokeLinecap="round"
-          className="text-indigo9 transition-[stroke-dashoffset] duration-150"
+          className="reading-progress-ring text-indigo9 transition-[stroke-dashoffset] duration-150"
         />
       </svg>
       <span

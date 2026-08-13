@@ -42,7 +42,16 @@ function Toc(props: TocProps) {
       });
     const updateActiveHeading = () => {
       frameId = 0;
-      setActiveSlug(getActiveHeadingSlug(getPositions(), window.scrollY));
+      const root = document.documentElement;
+      setActiveSlug(
+        getActiveHeadingSlug(
+          getPositions(),
+          window.scrollY,
+          120,
+          root.scrollHeight,
+          root.clientHeight,
+        ),
+      );
     };
     const scheduleUpdate = () => {
       if (frameId === 0) {
@@ -82,7 +91,9 @@ function Toc(props: TocProps) {
     window.history.pushState(null, '', `#${encodeURIComponent(slug)}`);
     window.scrollTo({
       top: getHeadingScrollTop(offsetTop, 96),
-      behavior: 'smooth',
+      behavior: window.matchMedia('(prefers-reduced-motion: reduce)').matches
+        ? 'auto'
+        : 'smooth',
     });
     setActiveSlug(slug);
   };

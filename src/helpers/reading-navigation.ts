@@ -15,9 +15,26 @@ export function getActiveHeadingSlug(
   positions: HeadingPosition[],
   scrollTop: number,
   threshold = 120,
+  scrollHeight?: number,
+  clientHeight?: number,
 ): string {
+  if (positions.length === 0) return '';
+
   const safeScrollTop = Number.isFinite(scrollTop) ? scrollTop : 0;
   const safeThreshold = Number.isFinite(threshold) ? threshold : 0;
+  const hasDocumentMeasurements =
+    Number.isFinite(scrollHeight) && Number.isFinite(clientHeight);
+  const maxScrollTop =
+    hasDocumentMeasurements &&
+    scrollHeight !== undefined &&
+    clientHeight !== undefined
+      ? Math.max(0, scrollHeight - clientHeight)
+      : undefined;
+
+  if (maxScrollTop !== undefined && safeScrollTop >= maxScrollTop - 1) {
+    return positions.at(-1)?.slug ?? '';
+  }
+
   const activationPoint = safeScrollTop + safeThreshold;
   let activeSlug = '';
 
@@ -69,7 +86,7 @@ export function buildChatGPTReadingUrl(
     .filter(Boolean)
     .map((segment) => encodeURIComponent(segment))
     .join('/');
-  baseUrl.pathname = `${normalizedBasePath}/blog/${encodedSlug}`;
+  baseUrl.pathname = `${normalizedBasePath}/blog/${encodedSlug}/`;
   baseUrl.search = '';
   baseUrl.hash = '';
 

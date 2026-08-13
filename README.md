@@ -183,7 +183,9 @@ In addition to standard Markdown syntax, the following extended syntax is suppor
 Using `:::` markers
 
 ```md
-:::info This is an information prompt :::
+:::info
+This is an information prompt
+:::
 ```
 
 #### LaTeX Mathematical Formulas

@@ -80,12 +80,12 @@ assert.equal(
 );
 assert.equal(
   parsedChatGPTUrl.searchParams.get('q'),
-  'Summarize this article: https://example.com/base/blog/hello%20world',
+  'Summarize this article: https://example.com/base/blog/hello%20world/',
   'the prompt must contain an absolute canonical article URL',
 );
 assert.match(
   chatGPTReadingUrl,
-  /q=Summarize\+this\+article%3A\+https%3A%2F%2Fexample\.com%2Fbase%2Fblog%2Fhello%2520world/,
+  /q=Summarize\+this\+article%3A\+https%3A%2F%2Fexample\.com%2Fbase%2Fblog%2Fhello%2520world%2F/,
   'the complete prompt and canonical URL must be percent-encoded',
 );
 
@@ -128,6 +128,11 @@ assert.equal(
   getActiveHeadingSlug(positions, 900, 120),
   'fourth',
   'scroll fallback must select the last heading crossed by the threshold',
+);
+assert.equal(
+  getActiveHeadingSlug(positions, 1200, 120, 2000, 800),
+  'fourth',
+  'the final short section must become active when the document reaches bottom',
 );
 
 assert.equal(
@@ -218,8 +223,13 @@ assert.match(
 );
 assert.match(
   tocComponent,
-  /behavior:\s*['"]smooth['"]/,
+  /behavior:[\s\S]*?['"]smooth['"]/,
   'desktop TOC selection must scroll smoothly',
+);
+assert.match(
+  tocComponent,
+  /behavior:[\s\S]*?prefers-reduced-motion:\s*reduce[\s\S]*?['"]auto['"][\s\S]*?['"]smooth['"]/,
+  'desktop TOC scrolling must respect reduced-motion preferences',
 );
 assert.match(
   blogStyles,
@@ -334,6 +344,11 @@ assert.match(
   commonStyles,
   /\.affix-title-fallback[\s\S]*?backdrop-filter:/,
   'disabled progressive blur must retain an ordinary backdrop blur',
+);
+assert.match(
+  commonStyles,
+  /prefers-reduced-motion:\s*reduce[\s\S]*?\.reading-progress-ring[\s\S]*?transition:\s*none/,
+  'circular progress transitions must stop when reduced motion is preferred',
 );
 assert.match(
   articlePage,

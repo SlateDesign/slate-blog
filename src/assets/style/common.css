@@ -179,4 +179,8 @@ body {
   .affix-title-fallback {
     transition-duration: 0ms;
   }
+
+  .reading-progress-ring {
+    transition: none;
+  }
 }
