@@ -16,21 +16,32 @@ const importTypeScript = async (path) => {
   );
 };
 
-const { NOW_PAGE_SOURCE, findNowPage } = await importTypeScript(
-  'src/helpers/optional-now-page.ts',
+const { OPTIONAL_PAGE_SOURCES, findOptionalPage } = await importTypeScript(
+  'src/helpers/optional-content-page.ts',
 );
 
-assert.equal(NOW_PAGE_SOURCE, '/src/content/now.md');
-assert.equal(findNowPage({}), undefined);
+assert.equal(OPTIONAL_PAGE_SOURCES.now, '/src/content/now.md');
+assert.equal(findOptionalPage({}, OPTIONAL_PAGE_SOURCES.now), undefined);
 
 const expected = { Content: 'compiled-now-page' };
+const wrongOnlyNowModules = {
+  '/src/content/now.mdx': { Content: 'wrong-extension' },
+  '/src/content/nested/now.md': { Content: 'wrong-directory' },
+  '/src/content/now.md.backup': { Content: 'approximate-name' },
+};
+
 assert.equal(
-  findNowPage({
+  findOptionalPage(wrongOnlyNowModules, OPTIONAL_PAGE_SOURCES.now),
+  undefined,
+  'Now discovery must ignore wrong-only module tables',
+);
+assert.equal(
+  findOptionalPage({
     '/src/content/config.ts': {},
     '/src/content/now.mdx': { Content: 'wrong-extension' },
     '/src/content/nested/now.md': { Content: 'wrong-directory' },
     '/src/content/now.md': expected,
-  }),
+  }, OPTIONAL_PAGE_SOURCES.now),
   expected,
 );
 
@@ -50,13 +61,18 @@ assert.doesNotMatch(
 );
 assert.match(
   header,
-  /findNowPage\([\s\S]*?\)[\s\S]*?hasNowPage[\s\S]*?<nav/,
-  'Header must render navigation only when now.md exists',
+  /const hasNowPage = Boolean\(\s*findOptionalPage\(\s*contentModules,\s*OPTIONAL_PAGE_SOURCES\.now,?\s*\),\s*\);/,
+  'Header must compute the Now state from its exact optional content source',
 );
 assert.match(
   header,
-  /hasNowPage\s*&&\s*\([\s\S]*?<nav/,
-  'Header must omit the complete nav element when the file is absent',
+  /hasOptionalPages\s*&&\s*\(\s*<nav/,
+  'Header must omit the complete nav element when both optional pages are absent',
+);
+assert.match(
+  header,
+  /\{hasNowPage\s*&&\s*\(\s*<a\s+href=["']\/now["'][\s\S]*?<\/a>\s*\)\}/,
+  'Header must omit the Now link when now.md is absent',
 );
 assert.match(
   header,

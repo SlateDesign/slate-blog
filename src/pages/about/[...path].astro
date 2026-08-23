@@ -8,34 +8,34 @@ import {
 import 'remark-block-containers/css';
 import '@/assets/style/blog.css';
 
-type NowModule = MarkdownInstance<Record<string, unknown>>;
+type AboutModule = MarkdownInstance<Record<string, unknown>>;
 
 export async function getStaticPaths() {
-  const loaders = import.meta.glob<NowModule>('/src/content/*');
-  const loadNowPage = findOptionalPage(
+  const loaders = import.meta.glob<AboutModule>('/src/content/*');
+  const loadAboutPage = findOptionalPage(
     loaders,
-    OPTIONAL_PAGE_SOURCES.now,
+    OPTIONAL_PAGE_SOURCES.about,
   );
-  if (!loadNowPage) return [];
+  if (!loadAboutPage) return [];
 
-  const nowPage = await loadNowPage();
+  const aboutPage = await loadAboutPage();
 
   return [
     {
       params: { path: undefined },
-      props: { Content: nowPage.Content },
+      props: { Content: aboutPage.Content },
     },
   ];
 }
 
 interface Props {
-  Content: NowModule['Content'];
+  Content: AboutModule['Content'];
 }
 
 const { Content } = Astro.props;
 ---
 
-<PageLayout title="Now">
+<PageLayout title="About">
   <div class="blog-content">
     <Content />
   </div>

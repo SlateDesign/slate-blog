@@ -58,6 +58,7 @@ pnpm build
   ├── components/     # Components
   ├── content/        # Content collections and optional pages
   │   ├── now.md      # Optional /now page; delete to disable
+  │   ├── about.md    # Optional /about page; delete to disable
   │   └── post/       # Blog articles
   ├── helpers/        # Business logic
   ├── pages/          # Pages
@@ -69,6 +70,10 @@ pnpm build
 ### Optional Now Page
 
 `src/content/now.md` enables the `/now` page and its Header navigation entry. The included example means this is enabled by default. It uses the same Markdown pipeline and typography as blog articles, including code blocks, tables, math, containers, and image captions. Delete `src/content/now.md` to remove the navigation entry, route, and sitemap address.
+
+### Optional About page
+
+`src/content/about.md` is the exact switch for the `/about` page and its Header navigation entry. The repository template includes this file, so About is enabled by default. `/about` uses the full article/Now Markdown pipeline and typography, including code blocks, tables, math, containers, and image captions. Deleting `src/content/about.md` removes the About navigation, route, and sitemap URL without disabling Now.
 
 ## Configuration
 
@@ -206,6 +211,11 @@ This is an information prompt
 ```
 
 ## Updates
+
+### Version 1.8.0
+
+- Added an optional, complete-Markdown About page driven by `src/content/about.md`
+- Shared exact file discovery between the independent Now and About pages
 
 ### Version 1.7.0
 
