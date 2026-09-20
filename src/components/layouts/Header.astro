@@ -1,21 +1,57 @@
 ---
 import slateConfig from '~@/slate.config';
+import {
+  findOptionalPage,
+  OPTIONAL_PAGE_SOURCES,
+} from '@/helpers/optional-content-page';
 
 interface Props {
   avatar?: string;
 }
 
 const { avatar = slateConfig.avatar } = Astro.props;
+const contentModules = import.meta.glob('/src/content/*');
+const hasNowPage = Boolean(
+  findOptionalPage(contentModules, OPTIONAL_PAGE_SOURCES.now),
+);
+const hasAboutPage = Boolean(
+  findOptionalPage(contentModules, OPTIONAL_PAGE_SOURCES.about),
+);
+const hasOptionalPages = hasNowPage || hasAboutPage;
 ---
 
 <header>
-  <div class="mb-9 h-14 w-14 whitespace-nowrap text-[0px]">
-    <img
-      class="block h-full w-full rounded-full border-2 border-white bg-slate2 shadow-xs outline-1 outline-slate3"
-      src={avatar}
-      alt={slateConfig.title}
-      draggable="false"
-    />
-    <span>{slateConfig.title}</span>
+  <div class="mb-9 flex items-center justify-between">
+    <div class="h-14 w-14 whitespace-nowrap text-[0px]">
+      <img
+        class="block h-full w-full rounded-full border-2 border-white bg-slate2 shadow-xs outline-1 outline-slate3"
+        src={avatar}
+        alt={slateConfig.title}
+        draggable="false"
+      />
+      <span>{slateConfig.title}</span>
+    </div>
+    {
+      hasOptionalPages && (
+        <nav class="flex items-center gap-6" aria-label="Primary">
+          {hasNowPage && (
+            <a
+              href="/now"
+              class="text-slate11 hover:text-slate12 text-base font-medium transition-colors"
+            >
+              Now
+            </a>
+          )}
+          {hasAboutPage && (
+            <a
+              href="/about"
+              class="text-slate11 hover:text-slate12 text-base font-medium transition-colors"
+            >
+              About
+            </a>
+          )}
+        </nav>
+      )
+    }
   </div>
 </header>

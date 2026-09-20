@@ -13,6 +13,13 @@ export interface ThemeOptions {
   enableUserChange?: boolean;
 }
 
+export interface RelatedPostsOptions {
+  /** Whether to show related posts at the end of an article */
+  enabled?: boolean;
+  /** Maximum number of related posts */
+  limit?: number;
+}
+
 /** 社交链接配置 */
 export interface SocialLink {
   icon: SocialLinkIcon;
@@ -54,6 +61,14 @@ export interface SlateConfig {
   readTime?: boolean;
   /** Whether to show last modified time */
   lastModified?: boolean;
+  /** Whether to show the circular reading progress */
+  readingProgress?: boolean;
+  /** Whether to use a progressively fading blur behind the floating title */
+  progressiveBlur?: boolean;
+  /** Whether to show the external “Read with ChatGPT” action */
+  readWithChatGPT?: boolean;
+  /** Related-post recommendations */
+  relatedPosts?: RelatedPostsOptions;
   /** Docsearch configuration */
   algolia?: {
     appId: string;

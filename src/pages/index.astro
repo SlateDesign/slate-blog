@@ -7,89 +7,151 @@ import PageLayout from '@/components/layouts/PageLayout.astro';
 import slateConfig from '~@/slate.config';
 
 const postCollection = await getCollection('post', ({ data }) => {
-  return import.meta.env.DEV || data.draft !== true;
+  return data.draft !== true;
 });
 
-const tagCounts = postCollection.reduce<Record<string, number>>(
-  (res, post) => {
-    const postTags = post.data.tags;
-    if (!postTags || !postTags.length) return res;
-    postTags.forEach((tag) => {
-      if (tag.trim() === '') return;
+const tagCounts = postCollection.reduce<Record<string, number>>((res, post) => {
+  const postTags = post.data.tags;
+  if (!postTags || !postTags.length) return res;
+  postTags.forEach((tag) => {
+    if (tag.trim() === '') return;
 
-      if (res[tag]) {
-        res[tag]++;
-      } else {
-        res[tag] = 1;
-      }
-    });
-    return res;
-  },
-  {
-    [i18next.t('common.all')]: postCollection.length,
-  },
-);
+    if (res[tag]) {
+      res[tag]++;
+    } else {
+      res[tag] = 1;
+    }
+  });
+  return res;
+}, {});
 
-const tags = Object.keys(tagCounts).map((tag) => ({
-  name: tag,
-  count: tagCounts[tag],
-}));
+const tags = [
+  { value: '', name: i18next.t('common.all'), count: postCollection.length },
+  ...Object.keys(tagCounts).map((tag) => ({
+    value: tag,
+    name: tag,
+    count: tagCounts[tag],
+  })),
+];
 
 const posts = [...postCollection]
   .sort((a, b) => b.data.pubDate!.getTime() - a.data.pubDate!.getTime())
   .map((post) => ({
-    id: post.id,
-    slug: post.slug,
     url: `/blog/${post.slug}`,
-    data: post.data,
+    title: post.data.title,
+    pubDate: post.data.pubDate?.toISOString() ?? '',
+    tags: post.data.tags,
   }));
 ---
 
 <PageLayout>
   <section class="relative mb-16">
-    <h3 class="text-[40px] font-semibold leading-tight text-slate12">
+    <h3 class="text-slate12 text-[40px] leading-tight font-semibold">
       {slateConfig.title}
     </h3>
-    <p class="text-xl text-slate10">{slateConfig.description}</p>
+    <p class="text-slate10 text-xl">{slateConfig.description}</p>
     <Search
       client:only="react"
-      className="absolute right-0 top-1/2 -translate-y-1/2"
+      className="absolute top-1/2 right-0 -translate-y-1/2"
     />
   </section>
 
-  <section class="mb-16">
-    <div class="text-base text-slate12">
-      {
-        posts.map((item) => (
-          <a class="flex cursor-pointer flex-col justify-between rounded-lg py-2.5 transition-all active:scale-[0.995] active:bg-slate4 sm:flex-row sm:items-center sm:px-2 sm:hover:bg-slate3" href={item.url} title={item.data.title}>
-            <span class="shrink-0">{item.data.title}</span>
-            <span class="mx-8 hidden h-px w-full grow border-t border-dashed border-slate6 sm:flex" />
-            <span class="shrink-0 text-slate8">
-              {item.data.pubDate?.toLocaleDateString('en-US', {
-                year: 'numeric',
-                month: 'short',
-                day: 'numeric',
-              })}
-            </span>
-          </a>
-        ))
-      }
-    </div>
-    <!-- <Button className='m-auto mt-6' block> More </Button> -->
-  </section>
+  <div id="tag-filter">
+    <section id="post-list" class="mb-16 scroll-mt-8">
+      <div class="text-slate12 text-base">
+        {
+          posts.map((post) => (
+            <a
+              class="post-item active:bg-slate4 sm:hover:bg-slate3 flex cursor-pointer flex-col justify-between rounded-lg py-2.5 transition-all active:scale-[0.995] sm:flex-row sm:items-center sm:px-2"
+              href={post.url}
+              title={post.title}
+              data-tags={JSON.stringify(post.tags ?? [])}
+            >
+              <span class="shrink-0">{post.title}</span>
+              <span class="border-slate6 mx-8 hidden h-px w-full grow border-t border-dashed sm:flex" />
+              <time class="text-slate8 shrink-0" datetime={post.pubDate}>
+                {new Date(post.pubDate).toLocaleDateString(slateConfig.lang, {
+                  year: 'numeric',
+                  month: 'short',
+                  day: 'numeric',
+                })}
+              </time>
+            </a>
+          ))
+        }
+        <p id="no-posts" class="text-slate10 hidden py-8 text-center">
+          {i18next.t('common.noPostsForTag')}
+        </p>
+      </div>
+    </section>
 
-  <!-- S 标签 -->
-  <section class="mb-16">
-    <ul class="flex flex-wrap gap-2 text-base text-slate10">
-      {
-        tags.map(({ name, count }) => (
-          <li class="block cursor-pointer rounded-full bg-slate3 px-4 py-2 text-slate10 transition-all hover:bg-slate4 hover:text-slate11">
-            {name}
-            <sup class="text-[10px] text-slate8">{count}</sup>
-          </li>
-        ))
-      }
-    </ul>
-  </section>
-  <!-- E 标签 -->
+    <section class="mb-16">
+      <ul class="text-slate10 flex flex-wrap gap-2 text-base">
+        {
+          tags.map(({ value, name, count }, index) => (
+            <li>
+              <button
+                type="button"
+                data-tag={value}
+                aria-pressed={index === 0 ? 'true' : 'false'}
+                class:list={[
+                  'focus-visible:outline-slate11 cursor-pointer rounded-full px-4 py-2 transition-all focus-visible:outline-2 focus-visible:outline-offset-2',
+                  index === 0
+                    ? 'bg-slate12 text-slate1'
+                    : 'bg-slate3 text-slate10 hover:bg-slate4 hover:text-slate11',
+                ]}
+              >
+                {name}
+                <sup class="ml-1 text-[10px] opacity-70">{count}</sup>
+              </button>
+            </li>
+          ))
+        }
+      </ul>
+    </section>
+  </div>
 </PageLayout>
+
+<script>
+  const filterRoot = document.getElementById('tag-filter');
+  const postList = document.getElementById('post-list');
+  const noPosts = document.getElementById('no-posts');
+
+  filterRoot
+    ?.querySelectorAll<HTMLButtonElement>('button[data-tag]')
+    .forEach((button) => {
+      button.addEventListener('click', () => {
+        const activeTag = button.dataset.tag ?? '';
+        let visibleCount = 0;
+
+        filterRoot
+          .querySelectorAll<HTMLAnchorElement>('.post-item')
+          .forEach((post) => {
+            const tags = JSON.parse(post.dataset.tags ?? '[]') as string[];
+            const visible = activeTag === '' || tags.includes(activeTag);
+            post.hidden = !visible;
+            if (visible) visibleCount++;
+          });
+
+        filterRoot
+          .querySelectorAll<HTMLButtonElement>('button[data-tag]')
+          .forEach((tagButton) => {
+            const selected = tagButton === button;
+            tagButton.setAttribute('aria-pressed', String(selected));
+            tagButton.classList.toggle('bg-slate12', selected);
+            tagButton.classList.toggle('text-slate1', selected);
+            tagButton.classList.toggle('bg-slate3', !selected);
+            tagButton.classList.toggle('text-slate10', !selected);
+          });
+
+        noPosts?.classList.toggle('hidden', visibleCount > 0);
+        const reduceMotion = window.matchMedia(
+          '(prefers-reduced-motion: reduce)',
+        ).matches;
+        postList?.scrollIntoView({
+          behavior: reduceMotion ? 'auto' : 'smooth',
+          block: 'start',
+        });
+      });
+    });
+</script>

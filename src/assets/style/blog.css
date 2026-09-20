@@ -2,23 +2,46 @@
 
 .blog-content {
   @apply mb-16;
+  overflow-wrap: break-word;
 
   h1 {
-    @apply text-slate12 mb-2 text-4xl leading-normal font-bold;
+    @apply text-slate12 mb-2 text-3xl leading-normal font-bold sm:text-4xl;
   }
   h2 {
-    @apply text-slate12 mt-8 mb-2 text-3xl leading-normal font-semibold;
+    @apply text-slate12 mt-8 mb-2 text-2xl leading-normal font-semibold sm:text-3xl;
   }
   h3 {
-    @apply text-slate12 my-2 text-2xl leading-normal font-semibold;
+    @apply text-slate12 my-2 text-xl leading-normal font-semibold sm:text-2xl;
   }
 
   h4 {
     @apply text-slate12 my-2 text-base leading-normal font-semibold;
   }
 
+  h2,
+  h3,
+  h4,
+  h5,
+  h6 {
+    scroll-margin-top: 6rem;
+  }
+
   p {
     @apply text-slate12 my-6 mt-4 text-base leading-relaxed;
+  }
+
+  .related-posts-description {
+    @apply my-0 text-sm leading-relaxed;
+  }
+
+  .related-posts-link,
+  .related-posts-link:hover {
+    text-decoration-line: none;
+  }
+
+  .read-with-chatgpt,
+  .read-with-chatgpt:hover {
+    text-decoration-line: none;
   }
 
   a {
@@ -32,10 +55,14 @@
 
   img {
     @apply border-slate6 mx-auto my-8 w-full rounded-2xl border;
+    max-width: 100%;
+    height: auto;
   }
 
   code {
     @apply border-slate4 bg-slate3 text-slate11 mx-0.5 rounded-lg border p-0.5 px-1 text-base;
+    word-break: break-all;
+    overflow-wrap: break-word;
   }
 
   .code {
@@ -70,17 +97,35 @@
     }
   }
 
-  table {
-    @apply ring-slate4 my-6 w-full border-collapse overflow-hidden rounded-xl ring-1;
+  .table-scroll {
+    @apply ring-slate4 my-6 w-full rounded-xl ring-1;
+    overflow: hidden;
+    overflow-x: auto;
+  }
 
-    thead {
-      @apply border-slate4 bg-slate3 border-b text-left;
-    }
+  .table-scroll > table {
+    @apply border-collapse;
+    width: max-content;
+    min-width: 100%;
+    margin: 0;
+    border: 0;
+    border-radius: 0;
+    box-shadow: none;
+    white-space: nowrap;
+  }
 
-    th,
-    td {
-      @apply border-slate4 border-b px-4 py-3;
-    }
+  .table-scroll > table thead {
+    @apply border-slate4 bg-slate3 border-b text-left;
+  }
+
+  .table-scroll > table th,
+  .table-scroll > table td {
+    @apply border-slate4 border-b px-4 py-3;
+  }
+
+  .table-scroll > table tbody tr:last-child th,
+  .table-scroll > table tbody tr:last-child td {
+    @apply border-b-0;
   }
 
   blockquote {
@@ -127,28 +172,30 @@
     @apply mb-6;
   }
 
-  heti-spacing {
-    @apply inline;
+  .expressive-code figure,
+  figure.expressive-code {
+    border: 1px solid var(--slate-6) !important;
+    border-radius: 1rem !important;
+    box-shadow: none !important;
+    overflow: hidden !important;
   }
 
-  .heti-spacing-start {
-    @apply me-[0.25em];
+  .expressive-code pre,
+  figure.expressive-code pre {
+    @apply overflow-x-auto;
+    max-width: 100%;
+    border: 0 !important;
+    border-radius: 0 !important;
+    box-shadow: none !important;
   }
 
-  .heti-spacing-end {
-    @apply ms-[0.25em];
+  .expressive-code figure > figcaption.header {
+    border: 0 !important;
+    border-radius: 0 !important;
   }
 
-  heti-adjacent {
-    @apply inline;
-  }
-
-  .heti-adjacent-half {
-    @apply me-[-0.5em];
-  }
-
-  .heti-adjacent-quarter {
-    @apply me-[-0.25em];
+  .expressive-code figure > figcaption.header::before {
+    border: 0 !important;
   }
 
   /* 两张图片分栏 */
@@ -195,7 +242,7 @@
     @apply relative mb-2 break-inside-avoid;
 
     figcaption {
-      @apply absolute overflow-hidden overflow-ellipsis max-w-[calc(100%-16px)] bottom-2 right-2 bg-black/50 rounded-lg px-2 py-1 text-white;
+      @apply absolute right-2 bottom-2 max-w-[calc(100%-16px)] overflow-hidden rounded-lg bg-black/50 px-2 py-1 overflow-ellipsis text-white;
     }
   }
 
@@ -204,7 +251,7 @@
   .rehype-figure-container:has(> .rehype-figure:nth-child(4)) img,
   .rehype-figure-container:has(> .rehype-figure:nth-child(5)) img,
   .rehype-figure-container:has(> .rehype-figure:nth-child(6)) img {
-    @apply m-0 border-slate6 rounded-2xl border;
+    @apply border-slate6 m-0 rounded-2xl border;
   }
 
   /* 针对6图模式调整间距 */

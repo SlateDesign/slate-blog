@@ -62,6 +62,12 @@ importers:
       mdast-util-to-string:
         specifier: ^4.0.0
         version: 4.0.0
+      pangu:
+        specifier: 7.2.1
+        version: 7.2.1
+      progressive-blur:
+        specifier: ^1.0.0
+        version: 1.0.0(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
       react:
         specifier: ^18.3.1
         version: 18.3.1
@@ -114,6 +120,9 @@ importers:
       '@typescript-eslint/parser':
         specifier: ^8.12.2
         version: 8.14.0(eslint@9.14.0(jiti@2.4.2))(typescript@5.6.3)
+      astro-eslint-parser:
+        specifier: 1.1.0
+        version: 1.1.0(typescript@5.6.3)
       eslint:
         specifier: 9.14.0
         version: 9.14.0(jiti@2.4.2)
@@ -3175,6 +3184,11 @@ packages:
     resolution: {integrity: sha512-R4nPAVTAU0B9D35/Gk3uJf/7XYbQcyohSKdvAxIRSNghFl4e71hVoGnBNQz9cWaXxO2I10KTC+3jMdvvoKw6dQ==}
     engines: {node: '>=6'}
 
+  pangu@7.2.1:
+    resolution: {integrity: sha512-HEWJHmYcJhGz5wGebMaKblzu709wUjzsnJzwdjaowAKQzHIHQDmWGpCbWWPx19Exnv/RaQ3UhUg4LkttWZsbCw==}
+    engines: {node: '>=18.0.0'}
+    hasBin: true
+
   parent-module@1.0.1:
     resolution: {integrity: sha512-GQ2EWRpQV8/o+Aw8YqtfZZPfNRWZYkbidE9k5rpl/hC3vtHHBfGm2Ifi6qWV+coDGkrUKZAxE3Lot5kcsRlh+g==}
     engines: {node: '>=6'}
@@ -3355,6 +3369,12 @@ packages:
   prismjs@1.29.0:
     resolution: {integrity: sha512-Kx/1w86q/epKcmte75LNrEoT+lX8pBpavuAbvJWRXar7Hz8jrtF+e3vY751p0R8H9HdArwaCTNDDzHg/ScJK1Q==}
     engines: {node: '>=6'}
+
+  progressive-blur@1.0.0:
+    resolution: {integrity: sha512-BZkJJHksqsxt9eJ+bv5ptXyUDa+ZbpOzdGJNJVxFo2qF0u+Y38E1oKWidt6JIaHCM1xk9o8LSjf9TbtHpbx9WQ==}
+    peerDependencies:
+      react: ^18.2.0
+      react-dom: ^18.2.0
 
   prompts@2.4.2:
     resolution: {integrity: sha512-NxNv/kLguCA7p3jE8oL2aEBsrJWgAakBpgmgK6lpPWV+WuOmY6r2/zbAVnP+T8bQlA0nzHXSJSJW0Hq7ylaD2Q==}
@@ -8073,6 +8093,8 @@ snapshots:
 
   p-try@2.2.0: {}
 
+  pangu@7.2.1: {}
+
   parent-module@1.0.1:
     dependencies:
       callsites: 3.1.0
@@ -8200,6 +8222,11 @@ snapshots:
   prettier@3.3.3: {}
 
   prismjs@1.29.0: {}
+
+  progressive-blur@1.0.0(react-dom@18.3.1(react@18.3.1))(react@18.3.1):
+    dependencies:
+      react: 18.3.1
+      react-dom: 18.3.1(react@18.3.1)
 
   prompts@2.4.2:
     dependencies:

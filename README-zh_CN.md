@@ -3,6 +3,7 @@
 [English](./README.md) · 中文
 
 ## 我们为什么创作这样一个博客主题
+
 我们热爱写作与分享，也很欣赏精致的互联网产品。正因如此，我们创作了这个简洁的博客主题，它专注于内容本身，提供流畅、纯粹的写作与阅读体验。而基于各种现代的技术栈，也让其更快速、轻便和高效。
 
 它还能与 [Obsidian](https://obsidian.md/) 无缝结合，你可以轻松将笔记转化为精致的博客文章。
@@ -18,6 +19,13 @@
 - 支持 Algolia 搜索
 - 完善的 SEO 支持
 - 横向多图布局，支持自动分栏排列
+- 使用 Pangu 优化中英文和数字混排间距
+- 代码块跟随浅色、深色主题切换
+- 首页标签筛选和可选的相关文章推荐
+- 桌面端章节定位和无障碍移动端目录
+- 圆形阅读进度和渐进模糊悬浮标题
+- 使用 Markdown 驱动的可选 Now 与 About 页面
+- 可选的“与 ChatGPT 一起阅读”入口
 
 ## 🪜 框架
 
@@ -53,12 +61,23 @@ pnpm build
 - src/
   ├── assets/         # 图片文件
   ├── components/     # 组件
-  ├── content/        # 内容
+  ├── content/        # 内容集合与可选页面
+  │   ├── now.md      # 可选 /now 页面，删除即可关闭
+  │   ├── about.md    # 可选 /about 页面，删除即可关闭
+  │   └── post/       # 博客文章
   ├── helpers/        # 业务逻辑
   ├── pages/          # 页面
   └── typings/        # 通用类型
 
 ```
+
+### 可选 Now 页面
+
+`src/content/now.md` 会启用 `/now` 页面及 Header 中的 Now 入口。仓库随附示例，因此默认启用。该页面与博客文章共用完整 Markdown 渲染链路和正文样式，包括代码块、表格、数学公式、容器及图片说明。删除 `src/content/now.md` 会同时移除导航入口、页面路由和 sitemap 地址。
+
+### 可选 About 页面
+
+`src/content/about.md` 是 `/about` 页面及 Header 中 About 入口的唯一开关。仓库模板包含该文件，因此 About 默认启用。`/about` 与文章和 Now 页面共用完整 Markdown 渲染链路和排版样式，包括代码块、表格、数学公式、容器及图片说明。删除 `src/content/about.md` 会移除 About 导航、路由和 sitemap 地址，而 Now 仍由 `now.md` 独立控制。
 
 ## 配置
 
@@ -75,6 +94,10 @@ pnpm build
 | sitemap | 网站 sitemap 配置 | [SitemapOptions](https://docs.astro.build/zh-cn/guides/integrations-guide/sitemap/) | - |
 | readTime | 是否显示阅读时间 | `boolean` | `false` |
 | lastModified | 是否显示最后修改时间 | `boolean` | `false` |
+| relatedPosts | 相关文章推荐 | `{ enabled?: boolean, limit?: number }` | `{ enabled: false, limit: 3 }` |
+| readingProgress | 是否在悬浮文章标题中显示圆形阅读进度 | `boolean` | `true` |
+| progressiveBlur | 悬浮文章标题是否使用渐变模糊背景 | `boolean` | `true` |
+| readWithChatGPT | 是否显示外部“与 ChatGPT 一起阅读”入口 | `boolean` | `false` |
 | algolia | docsearch 配置 | `{ appId: string, apiKey: string, indexName: string }` | - |
 | follow | follow 订阅认证配置 | `{ feedId: string, userId: string }` | - |
 | footer | 网站底部配置 | `{ copyright: string }` | - |
@@ -96,14 +119,14 @@ type SocialLinkIcon =
   | 'threads'
   | 'x'
   | 'youtube'
-  | { svg: string }
+  | { svg: string };
 ```
 
 ### algolia 申请
 
 1. 部署网站
 2. 在 [Algolia](https://docsearch.algolia.com/apply/) 申请应用 `apiKey`
-3. 申请完成后且通过，在 `slate.config.ts` 中配置 `algolia` 
+3. 申请完成后且通过，在 `slate.config.ts` 中配置 `algolia`
 4. 重新部署网站
 
 ### Follow 订阅认证
@@ -112,7 +135,6 @@ type SocialLinkIcon =
 2. 部署站点
 3. 在 Follow 点击 `+` 号，选择 `RSS` 订阅，填入 `rss` 链接，一般为 `[site]/rss.xml`, `site` 为 `slate.config.ts` 配置文件中 `site` 的值。
 4. 重新部署网站
-
 
 ## 文章 frontmatter 说明
 
@@ -125,6 +147,24 @@ type SocialLinkIcon =
 | pubDate | 文章发布时间 | `date` | 否，当 `draft` 为 `false` 时，必须传 |
 
 **详细可以查看 `src/content/config.ts` 文件**
+
+首页固定支持按标签筛选文章。开启相关文章后，推荐分数由 70% 的标签重合度和 30% 的发布时间接近程度组成。
+
+```ts
+export default defineConfig({
+  // 其他配置……
+  relatedPosts: {
+    enabled: true,
+    limit: 3,
+  },
+});
+```
+
+文章存在章节标题时，桌面和移动目录固定启用。移动目录支持点击遮罩关闭、Escape 关闭、焦点恢复，并遵循系统的减少动态效果设置。
+
+`readingProgress` 只控制圆形进度。将 `progressiveBlur` 设为 `false` 时，悬浮标题仍会显示，并回退为半透明背景和普通毛玻璃效果。
+
+开启 `readWithChatGPT` 后，主题会在新标签页打开 `chatgpt.com`，并在预填问题中包含文章的规范 URL。主题不会调用 ChatGPT API，也不会发送密钥；点击后会离开当前站点，并受 ChatGPT 的隐私政策约束。
 
 ### 示例
 
@@ -139,54 +179,96 @@ tags:
 pubDate: 2025-01-06
 ---
 ```
+
 ## Markdown 语法支持
 
 除了标准的 Markdown 语法外，我们还支持部分扩展语法。
 
 ### 基础语法
+
 - 标题、列表、引用、代码块等基础语法
 - 表格
 - 链接和图片
 - **粗体**、*斜体*和~删除线~文本
 
 ### 扩展语法
+
 #### 容器
+
 使用 `:::` 标记
-  ```md
-  :::info
-  这是一个信息提示
-  :::
-  ```
+
+```md
+:::info
+这是一个信息提示
+:::
+```
 
 #### LaTeX 数学公式
-  - 行内公式: $E = mc^2$
-  - 块级公式: $$ E = mc^2 $$
+
+- 行内公式: $E = mc^2$
+- 块级公式: $$ E = mc^2 $$
 
 #### 支持图片说明
-  ```md
-  ![Image caption](image-url)
-  ```
-  
+
+```md
+![Image caption](image-url)
+```
+
 ## 更新日志
+
+### 版本 1.8.0
+
+- 新增由 `src/content/about.md` 驱动、支持完整 Markdown 的可选 About 页面
+- Now 与 About 独立启停，并共享严格的文件发现逻辑
+
+### 版本 1.7.0
+
+- 新增由 `src/content/now.md` 驱动、支持完整 Markdown 的可选 Now 页面
+- 新增随文件存在性启用或关闭的 Header 入口与页面路由
+
+### 版本 1.6.0
+
+- 新增桌面当前章节定位和无障碍移动文章目录
+- 新增圆形阅读进度和默认开启的渐进模糊
+- 新增默认关闭的外部“与 ChatGPT 一起阅读”入口
+
+### 版本 1.5.0
+
+- 首页固定支持按标签筛选文章
+- 新增可选的相关文章推荐，默认关闭
+- 新增稳定的推荐排序和本地化内容发现状态
+
+### 版本 1.4.0
+
+- 使用 Pangu 替换 Heti，移除文章页运行时 CDN 依赖
+- 支持代码块浅色、深色主题自动切换
+- 优化移动端文章标题以及长代码、表格和图片的溢出表现
+
 ### 版本 1.3.0
+
 - 支持显示社交链接
 - 优化 RSS 生成
 - 添加同步最新版本脚本
 
 ### 版本 1.2.0
+
 - 支持多语言（中文和英语）
 - 修复已知问题
 
 ### 版本 1.1.1
+
 - 修复已知问题
 
 ### 版本 1.1.0
+
 - 升级支持 [Tailwind CSS v4.0](https://tailwindcss.com/blog/tailwindcss-v4)
 - 支持深色模式
 - 修复已知问题
 
 ## 使用本主题的博客
+
 以下是一些使用这个主题搭建的博客：
+
 - [Bluepikachu](https://bluepika.life/)
 - [Chieh的随笔](https://blog.chieh.nyc.mn/)
 - [Feazur](https://blog.feazur.com/)
