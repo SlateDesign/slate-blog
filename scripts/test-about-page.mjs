@@ -202,16 +202,12 @@ assert.doesNotMatch(
 const aboutMarkdown = read('src/content/about.md');
 
 assert.match(aboutMarkdown, /^## About Slate Blog$/m);
-assert.match(aboutMarkdown, /^## Project principles$/m);
+assert.match(aboutMarkdown, /^## About this site$/m);
 assert.match(aboutMarkdown, /open-source, minimalist blog theme/i);
 assert.match(aboutMarkdown, /Astro, React, TypeScript, and Tailwind CSS/);
 assert.match(
   aboutMarkdown,
-  /https:\/\/github\.com\/SlateDesign\/slate-blog/,
-);
-assert.match(
-  aboutMarkdown,
-  /delete `src\/content\/about\.md` to remove the About navigation, route, and sitemap entry/i,
+  /delete `src\/content\/about\.md` to\s+disable the page/i,
 );
 assert.doesNotMatch(aboutMarkdown, /^---\s*$/m);
 assert.doesNotMatch(
