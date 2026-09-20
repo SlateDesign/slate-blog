@@ -21,6 +21,11 @@ It also works seamlessly with [Obsidian](https://obsidian.md/), helping you turn
 - Horizontal multi-image layout with automatic column distribution
 - Pangu spacing for mixed Chinese, Latin text, and numbers
 - Code highlighting that follows the light and dark themes
+- Tag filters on the home page and optional related-post recommendations
+- Active desktop navigation and an accessible mobile table of contents
+- Circular reading progress with a progressive-blur floating title
+- Optional Markdown-powered Now and About pages
+- Optional “Read with ChatGPT” action
 
 ## 🪜 Framework
 
@@ -67,7 +72,7 @@ pnpm build
 
 > Articles are stored in the `src/content/post` directory, supporting markdown and mdx formats. The filename is the path name. For example, `src/content/post/my-first-post.md` => `https://your-blog.com/blog/my-first-post`.
 
-### Optional Now Page
+### Optional Now page
 
 `src/content/now.md` enables the `/now` page and its Header navigation entry. The included example means this is enabled by default. It uses the same Markdown pipeline and typography as blog articles, including code blocks, tables, math, containers, and image captions. Delete `src/content/now.md` to remove the navigation entry, route, and sitemap address.
 
