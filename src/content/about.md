@@ -6,6 +6,4 @@ The theme supports Markdown and MDX posts, responsive layouts, light and dark mo
 
 ## About this site
 
-This site is a small home for writing and useful references. Replace this
-sample with your own introduction, or delete `src/content/about.md` to
-disable the page.
+Edit `src/content/about.md` to change the content shown on this page. Delete the file to disable the About navigation, route, and sitemap entry.

@@ -207,8 +207,13 @@ assert.match(aboutMarkdown, /open-source, minimalist blog theme/i);
 assert.match(aboutMarkdown, /Astro, React, TypeScript, and Tailwind CSS/);
 assert.match(
   aboutMarkdown,
-  /delete `src\/content\/about\.md` to\s+disable the page/i,
+  /Edit `src\/content\/about\.md` to change the content shown on this page\./,
 );
+assert.match(
+  aboutMarkdown,
+  /Delete the file to disable the About navigation, route, and sitemap entry\./,
+);
+assert.doesNotMatch(aboutMarkdown, /This site is a small home/i);
 assert.doesNotMatch(aboutMarkdown, /^---\s*$/m);
 assert.doesNotMatch(
   aboutMarkdown,
